@@ -1,0 +1,1507 @@
+<!doctype html>
+<html lang="id">
+<head>
+<base href="./public/">
+<meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0D6654">
+<title>Lash Bounty ERP · Pratinjau</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="img/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lash Bounty">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="../preview/demo.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="top-row">
+      <div class="brand">
+        <h1><img class="brand-logo" src="img/logo.svg" alt="">Lash Bounty ERP</h1>
+        <small id="who">Cabang input pengeluaran dan stock opname, semua terkumpul di sini</small>
+      </div>
+      <button class="iconbtn" id="themeBtn" type="button" data-t="auto" aria-label="Ganti tema"><svg class="i-auto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+      <button class="userchip" id="userChip" type="button" hidden title="Akun & keluar"><img id="ucAva" alt=""><span><b id="ucName"></b><small id="ucRole"></small></span></button>
+      <div class="month">
+        <label for="monthSel">Periode</label>
+        <select id="spanSel" aria-label="Jenis periode"><option value="1">Bulanan</option><option value="3">3 bulan</option><option value="6">6 bulan</option><option value="12">Tahunan</option></select>
+        <select id="monthSel"></select>
+        <span class="pill ok" id="perPill" hidden>Sudah tutup buku</span>
+      </div>
+    </div>
+    <div class="tabs" role="tablist" id="mainNav">
+      <button role="tab" data-main="dash" id="m-dash">Dashboard</button>
+      <button role="tab" data-main="acc" id="m-acc">Accounting</button>
+      <button role="tab" data-main="bank" id="m-bank">Banking</button>
+      <button role="tab" data-main="cust" id="m-cust">Customer</button>
+      <button role="tab" data-main="inv" id="m-inv">Persediaan</button>
+      <button role="tab" data-main="hrd" id="m-hrd">HRD</button>
+      <button role="tab" data-main="ask" id="m-ask">Ask Me!</button>
+      <button role="tab" data-main="set" id="m-set">Pengaturan</button>
+    </div>
+    <p class="note per-note" id="perNote" hidden></p>
+  </header>
+
+  <nav class="nav2" id="secNav" aria-label="Menu sekunder"></nav>
+  <nav class="nav3" id="terNav" aria-label="Menu tersier"></nav>
+
+  <!-- STAFF APP BAR (link khusus cabang) -->
+  <header class="staff-head" id="staffHead">
+    <span class="eyebrow" id="staffEyebrow">Petty cash · catat pengeluaran</span>
+    <h1 id="staffName">Memuat cabang…</h1>
+    <button type="button" class="staff-user" id="staffUser" hidden></button>
+    <div class="seg" role="group" aria-label="Pilih menu">
+      <button type="button" id="segInput" aria-pressed="true" data-go="input">Pengeluaran</button>
+      <button type="button" id="segStok" aria-pressed="false" data-go="stok">Stock opname</button>
+      <button type="button" id="segAbsen" aria-pressed="false" data-go="absen">Absensi</button>
+      <button type="button" id="segMinta" aria-pressed="false" data-go="minta">Minta barang</button>
+    </div>
+  </header>
+
+  <!-- DASHBOARD OWNER -->
+  <section id="view-dash" class="stack" data-pg="dash">
+    <p class="note" id="dashRO" hidden style="margin:0">Dashboard owner hanya bisa dibuka admin.</p>
+    <div class="stack" id="dashBody">
+      <div class="kpis" id="dKpis" data-pg="dash/ringkasan"></div>
+      <div class="panel" id="dNotifPanel" data-pg="dash/notif">
+        <div class="sec-h" style="margin-bottom:6px"><h2>Notifikasi pengeluaran besar</h2><span class="hint" id="dNotifHint"></span></div>
+        <div id="dNotif"></div>
+      </div>
+      <div class="stack" data-pg="dash/ringkasan">
+      <div class="panel">
+        <div class="sec-h" style="margin-bottom:8px"><h2 id="dDailyTitle">Omzet harian</h2><span class="hint" id="dDailyHint"></span></div>
+        <div class="legend" id="dLegend"></div>
+        <div class="scroll"><div id="dDaily"></div></div>
+      </div>
+      <div class="panel">
+        <div class="jr-head">
+          <div><span class="eyebrow">Omzet per tanggal · tutup buku tgl 26</span><h2 id="dTglTitle">Omzet per tanggal</h2></div>
+          <div class="jr-tools"><button class="btn" id="dSort" type="button">Terbaru dulu</button><button class="btn" id="dCsv" type="button" hidden>Download CSV</button></div>
+        </div>
+        <div class="scroll" style="margin-top:8px"><table class="dt" id="dTgl"></table></div>
+      </div>
+      <div class="two">
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:6px"><h2>Promo terlaris</h2><span class="hint" id="dPromoHint"></span></div>
+          <div id="dPromo"></div>
+        </div>
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:6px"><h2>Top omzet by therapist</h2><span class="hint" id="dTherHint"></span></div>
+          <div id="dTher"></div>
+        </div>
+      </div>
+      <div class="two">
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:10px"><h2>Pengeluaran cabang s/d hari ini</h2><span class="hint" id="dExpHint"></span></div>
+          <div class="scroll"><table id="dExp"></table></div>
+        </div>
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:6px"><h2>Layanan terlaris</h2><span class="hint" id="dTopHint"></span></div>
+          <div id="dTop"></div>
+        </div>
+      </div>
+      <div class="panel" id="dBankPanel" data-pg="dash/ringkasan" hidden>
+        <div class="sec-h" style="margin-bottom:8px"><h2>Saldo bank · catatan vs reality</h2><button class="btn ghost" type="button" data-nav="bank/saldo">Detail</button></div>
+        <div class="scroll"><table id="dBank"></table></div>
+      </div>
+      <div class="two">
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:6px"><h2>Perlu perhatian</h2><span class="hint" id="dAlertHint"></span></div>
+          <div id="dAlerts"></div>
+        </div>
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:10px"><h2>Ringkasan AI untuk owner</h2><button class="btn primary" id="dAiBtn" type="button">Buat ringkasan</button></div>
+          <p class="note" id="dAiHint" style="margin:0">Claude membaca omzet per grup, layanan & promo terlaris, pengeluaran cabang, dan stok periode ini lalu menulis poin penting. Hasilnya siap disalin ke WhatsApp.</p>
+          <pre class="ai-out" id="dAiOut" hidden></pre>
+          <button class="btn" id="dAiCopy" type="button" hidden style="margin-top:10px">Salin</button>
+        </div>
+      </div>
+      </div>
+      <div class="panel" data-pg="dash/compare">
+        <div class="jr-head">
+          <div><span class="eyebrow">Compare</span><h2>Bandingkan bulan</h2></div>
+          <div class="jr-tools"><button class="btn" id="cmpReload" type="button">Muat ulang</button><button class="btn" id="cmpCsv" type="button" hidden>Download CSV</button></div>
+        </div>
+        <p class="note" style="margin:10px 0 8px">Pilih 2–6 bulan untuk dibandingkan. Tiap bulan dihitung per periode tutup buku (27–26).</p>
+        <div class="chips" id="cmpChips"></div>
+        <div class="legend" id="cmpLegend" style="margin-top:12px"></div>
+        <div class="scroll"><div id="cmpChart"></div></div>
+        <div class="scroll" style="margin-top:10px"><table class="dt" id="cmpTable"></table></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INPUT -->
+  <section id="view-input" data-pg="acc/jurnal/input">
+    <div class="ok-box" id="okBox" hidden>
+      <span class="ok-ic" aria-hidden="true">✓</span>
+      <div style="flex:1;min-width:0"><b id="okTitle">Tersimpan</b><span id="okSub"></span></div>
+      <a class="btn wa" id="okWa" hidden target="_blank" rel="noopener">Kirim ke Owner (WA)</a>
+    </div>
+    <div class="panel">
+      <div class="sec-h" style="margin-bottom:14px"><h2>Catat pengeluaran petty cash</h2><span class="hint" id="goesTo"></span></div>
+      <form id="form" autocomplete="off">
+        <div class="fields">
+          <div class="field full" id="cabField"><label for="fCabang">Cabang</label><select id="fCabang" required></select></div>
+          <div class="field"><label for="fTanggal">Tanggal</label><input type="date" id="fTanggal" required></div>
+          <div class="field"><label for="fJumlah">Jumlah</label><div class="rp"><span>Rp</span><input type="text" id="fJumlah" inputmode="numeric" placeholder="0"></div></div>
+          <div class="field full"><label for="fKet">Keterangan</label><input type="text" id="fKet" placeholder="Contoh: beli galon & gas LPG" maxlength="140"></div>
+          <div class="field full"><label class="chk" for="fNoStruk"><input type="checkbox" id="fNoStruk"> Tidak ada struk, isi rincian belanja manual</label></div>
+          <div class="field full" id="notaField"><label for="fNota">No. nota / bukti</label><input type="text" id="fNota" placeholder="Contoh: NT-1042" maxlength="40"></div>
+          <div class="field full" id="rinciField" hidden>
+            <label>Rincian belanja</label>
+            <div class="rin-head"><span>Barang</span><span>Qty</span><span>Harga satuan</span><span></span></div>
+            <div id="rinci"></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px">
+              <button class="btn" id="addRinci" type="button">+ Tambah barang</button>
+              <span class="note">Total rincian otomatis jadi jumlah.</span>
+            </div>
+          </div>
+          <div class="field full"><label for="fPengisi">Nama pengisi</label><input type="text" id="fPengisi" class="pengisi" maxlength="40" placeholder="Nama kamu (tersimpan di HP ini)"></div>
+        </div>
+        <div class="scan" id="scanBox" hidden style="margin:16px 0 0">
+          <p><strong>Scan nota pakai AI</strong>Foto struk atau nota, form terisi otomatis. Cek lagi sebelum simpan.</p>
+          <label class="btn" for="scanFile" id="scanBtn">Pilih foto nota</label>
+          <input type="file" id="scanFile" accept="image/*" hidden>
+        </div>
+        <div class="form-foot">
+          <span class="note" id="formMsg"></span>
+          <button class="btn primary" id="saveBtn" type="submit">Simpan pengeluaran</button>
+        </div>
+      </form>
+    </div>
+    <p class="note" id="inputState" style="text-align:center;margin:0" hidden></p>
+    <datalist id="danaList"><option>Kas cabang</option><option>Pusat</option><option>FMS</option><option>Koko</option><option>Transfer bank</option></datalist>
+  </section>
+
+  <!-- BIAYA CABANG DI LUAR PETTY CASH -->
+  <section id="view-biaya" class="stack" data-pg="acc/jurnal/biaya">
+    <p class="note" id="bcRO" hidden style="margin:0">Biaya cabang di luar petty cash hanya bisa dibuka admin.</p>
+    <div class="stack" id="bcBody">
+      <div class="kpis" id="bcKpis"></div>
+      <div class="two">
+        <div class="panel" id="bcPanel">
+      <div class="sec-h" style="margin-bottom:12px"><h2>Input biaya cabang</h2><span class="hint">stok bahan, sewa, IPL, listrik, dll</span></div>
+      <form id="bcForm" autocomplete="off">
+        <div class="fields">
+          <div class="field"><label for="bcCabang">Cabang</label><select id="bcCabang"></select><small class="note" id="bcKatNote" hidden>Kantor Pusat: masuk Pengeluaran Pusat & laporan Global</small></div>
+          <div class="field"><label for="bcKat">Kategori</label><select id="bcKat"></select></div>
+          <div class="field"><label for="bcTgl">Tanggal</label><input type="date" id="bcTgl"></div>
+          <div class="field"><label for="bcJml">Jumlah</label><div class="rp"><span>Rp</span><input type="text" id="bcJml" inputmode="numeric" placeholder="0"></div></div>
+          <div class="field"><label for="bcKet">Keterangan</label><input type="text" id="bcKet" maxlength="140" placeholder="Contoh: Token listrik Oktober"></div>
+          <div class="field"><label for="bcDana">Dibayar dari</label><input type="text" id="bcDana" list="danaList" maxlength="30" placeholder="Contoh: Pusat, FMS, Koko"></div>
+          <div class="field"><label for="bcNota">No. bukti</label><input type="text" id="bcNota" maxlength="40" placeholder="Opsional"></div>
+          <div class="field"><label for="bcPengisi">Nama pengisi</label><input type="text" id="bcPengisi" class="pengisi" maxlength="40" placeholder="Nama kamu"></div>
+        </div>
+        <div class="scan" id="bcScanBox" hidden style="margin:14px 0 0"><p><strong>Scan nota pakai AI</strong>Foto nota/kuitansi, form terisi otomatis. Cek lagi sebelum simpan.</p><label class="btn" for="bcScan" id="bcScanBtn">Pilih foto nota</label><input type="file" id="bcScan" accept="image/*" hidden></div>
+        <div class="form-foot"><span class="note" id="bcMsg"></span><span style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn wa" id="bcWa" hidden target="_blank" rel="noopener">Kirim ke Owner (WA)</a><button class="btn primary" type="submit">Simpan pengeluaran</button></span></div>
+      </form>
+    </div>
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:10px"><h2>Per kategori</h2><span class="hint" id="bcSumHint"></span></div>
+          <div class="scroll"><table id="bcSum"></table></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="jr-head">
+          <div><span class="eyebrow">Jurnal biaya cabang · di luar petty cash</span><h2 id="bcListTitle">Biaya cabang</h2></div>
+          <div class="jr-tools"><select id="bcFilter" style="width:auto" aria-label="Filter cabang"></select></div>
+        </div>
+        <div class="scroll"><table class="jr" id="bcList"></table></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- JURNAL PENGELUARAN -->
+  <section id="view-rekap" class="stack" data-pg="acc/jurnal/report">
+    <div class="kpis" id="kpis"></div>
+
+    <div class="panel">
+      <div class="sec-h" style="margin-bottom:10px"><h2>Pengeluaran per cabang</h2><span class="hint" id="cabHint"></span></div>
+      <div class="scroll"><table id="cabTable"></table></div>
+    </div>
+
+    <div class="two">
+      <div class="panel">
+        <div class="sec-h" style="margin-bottom:6px"><h2>Petty cash perlu dicek</h2><span class="hint" id="flagCount"></span></div>
+        <div id="flags"></div>
+      </div>
+      <div class="panel">
+        <div class="sec-h" style="margin-bottom:10px">
+          <h2>Ringkasan AI petty cash</h2>
+          <button class="btn primary" id="aiBtn">Buat ringkasan</button>
+        </div>
+        <p class="note" id="aiHint" style="margin:0">Claude membaca petty cash periode ini dan menuliskan poin penting: cabang yang belum setor, perubahan dibanding periode lalu, dan item yang perlu dicek.</p>
+        <pre class="ai-out" id="aiOut" hidden></pre>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="jr-head">
+        <div><span class="eyebrow">Jurnal Pengeluaran</span><h2 id="jrTitle">Semua cabang</h2></div>
+        <div class="jr-tools">
+          <select id="txFilter" style="width:auto" aria-label="Filter cabang"></select>
+          <select id="txKat" style="width:auto" aria-label="Filter kategori"></select>
+          <button class="btn" id="csvBtn" hidden>Download CSV</button>
+        </div>
+      </div>
+      <div class="scroll"><table class="jr" id="txTable"></table></div>
+    </div>
+  </section>
+
+  <!-- OMZET -->
+  <section id="view-omzet" class="stack" data-pg="acc/omzet">
+    <div class="kpis" id="omKpis" data-pg="acc/omzet/report"></div>
+    <div class="two" data-pg="acc/omzet/input">
+      <div class="panel">
+        <div class="sec-h" style="margin-bottom:10px"><h2>Import laporan Zenwel</h2><span class="hint">CSV "Sales by item", 1 hari</span></div>
+        <div class="op-top">
+          <div class="field"><label for="zCabang">Cabang</label><select id="zCabang"></select></div>
+          <div class="field"><label for="zTanggal">Tanggal laporan</label><input type="date" id="zTanggal"></div>
+        </div>
+        <label class="drop" id="zDrop" for="zFile"><b>Pilih file export Zenwel</b><span>atau tarik file CSV ke sini. Tanggal terbaca otomatis dari nama file.</span></label>
+        <input type="file" id="zFile" accept=".csv,text/csv" hidden>
+        <div id="zPreview"></div>
+        <div class="form-foot" style="flex-direction:column;align-items:stretch;margin-top:10px">
+          <span class="note" id="zMsg"></span>
+          <button class="btn primary" id="zSave" type="button" disabled style="justify-content:center;padding:12px">Simpan ke jurnal masuk</button>
+        </div>
+      </div>
+      <div class="panel" id="omManPanel">
+      <div class="sec-h" style="margin-bottom:12px"><h2>Input omzet manual</h2><span class="hint">pemasukan di luar Zenwel</span></div>
+      <form id="omForm" autocomplete="off">
+        <div class="fields">
+          <div class="field"><label for="omCabang">Cabang</label><select id="omCabang"></select></div>
+          <div class="field"><label for="omTgl">Tanggal</label><input type="date" id="omTgl"></div>
+          <div class="field"><label for="omKat">Jenis pemasukan</label><select id="omKat"></select></div>
+          <div class="field"><label for="omJml">Jumlah</label><div class="rp"><span>Rp</span><input type="text" id="omJml" inputmode="numeric" placeholder="0"></div></div>
+          <div class="field"><label for="omKet">Keterangan</label><input type="text" id="omKet" maxlength="140" placeholder="Contoh: jual produk serum ke customer"></div>
+          <div class="field"><label for="omPengisi">Nama pengisi</label><input type="text" id="omPengisi" class="pengisi" maxlength="40" placeholder="Nama kamu"></div>
+          <div class="field"><label for="omCust">Nama customer (opsional)</label><input type="text" id="omCust" maxlength="60" placeholder="masuk database customer"></div>
+          <div class="field"><label for="omHp">No. HP customer (opsional)</label><input type="text" id="omHp" inputmode="tel" maxlength="20" placeholder="08xxxxxxxxxx"></div>
+        </div>
+        <p class="note" style="margin:8px 0 0">Pilih <b>Kantor Pusat</b> untuk pendapatan lain pusat; masuk Other income di laporan Global.</p>
+        <div class="form-foot"><span class="note" id="omMsg"></span><button class="btn primary" type="submit">Simpan omzet</button></div>
+      </form>
+    </div>
+    </div>
+    <div class="panel" id="byPanel" data-pg="acc/omzet/input" hidden>
+      <div class="jr-head">
+        <div><span class="eyebrow">Omzet masuk pakai pembayaran apa</span><h2 id="byTitle">Metode pembayaran harian</h2></div>
+        <div class="jr-tools"><select id="byCabang" style="width:auto" aria-label="Cabang"></select><span class="hint" id="byHint"></span></div>
+      </div>
+      <p class="note" style="margin:10px 0">Isi per hari dari ringkasan pembayaran Zenwel. Cash masuk ke kas cabang hari itu; EDC & QRIS dicocokkan dengan mutasi bank di menu Banking. Kolom tersimpan otomatis setelah pindah kotak. Selisih = total metode bayar − omzet POS.</p>
+      <details class="by-imp" id="byImpBox">
+        <summary>Import CSV pembayaran dari Zenwel</summary>
+        <div class="fields fields-3 cfg-f" style="margin-top:10px">
+          <div class="field"><label for="byImpTgl">Tanggal (kalau file tidak punya kolom tanggal)</label><input type="date" id="byImpTgl"></div>
+        </div>
+        <label class="drop" for="byImpF"><b>Pilih file CSV export pembayaran / transaksi Zenwel</b><span>Cabang = pilihan di atas. Metode bayar (Cash, QRIS, EDC BCA, EDC Mandiri, Transfer) dipetakan otomatis ke kolom; cek dulu sebelum simpan.</span></label>
+        <input type="file" id="byImpF" accept=".csv,text/csv" hidden>
+        <div id="byImpPrev"></div>
+      </details>
+      <div class="scroll"><table class="by-grid" id="byGrid"></table></div>
+    </div>
+    <div class="panel" id="kcPanel" data-pg="acc/omzet/input" hidden>
+      <div class="sec-h" style="margin-bottom:6px"><h2>Kas cabang & setoran ke bank</h2><span class="hint">cash yang sudah disetor menambah saldo bank</span></div>
+      <div class="scroll"><table id="kcTable"></table></div>
+      <form id="kcForm" autocomplete="off" style="margin-top:14px">
+        <div class="fields fields-3 cfg-f">
+          <div class="field"><label for="kcCabang">Cabang</label><select id="kcCabang"></select></div>
+          <div class="field"><label for="kcTgl">Tanggal setor</label><input type="date" id="kcTgl"></div>
+          <div class="field"><label for="kcRek">Disetor ke rekening</label><select id="kcRek"></select></div>
+          <div class="field"><label for="kcJml">Jumlah</label><div class="rp"><span>Rp</span><input type="text" id="kcJml" inputmode="numeric" placeholder="0"></div></div>
+          <div class="field" style="grid-column:span 2"><label for="kcKet">Keterangan</label><input type="text" id="kcKet" maxlength="120" placeholder="Contoh: setor cash 1–5 Okt via ATM"></div>
+        </div>
+        <div class="form-foot"><span class="note" id="kcMsg"></span><button class="btn primary" type="submit">Catat setoran</button></div>
+      </form>
+      <div class="scroll" style="margin-top:12px"><table id="kcList"></table></div>
+    </div>
+    <div class="stack" data-pg="acc/omzet/report">
+    <div class="panel">
+      <div class="sec-h" style="margin-bottom:10px"><h2>Omzet vs petty cash per cabang</h2></div>
+      <div class="scroll"><table id="omTable"></table></div>
+    </div>
+    <div class="panel">
+      <div class="jr-head">
+        <div><span class="eyebrow">Jurnal masuk · Zenwel & manual</span><h2 id="jmTitle">Semua cabang</h2></div>
+        <div class="jr-tools">
+          <select id="jmFilter" style="width:auto" aria-label="Filter cabang"></select>
+          <button class="btn" id="jmCsv" hidden>Download CSV</button>
+        </div>
+      </div>
+      <div class="scroll"><table class="jr" id="jmTable"></table></div>
+    </div>
+    <div class="panel">
+        <div class="sec-h" style="margin-bottom:6px"><h2>Layanan terlaris</h2><span class="hint" id="topHint"></span></div>
+        <div id="topItems"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- v1.1 · PERMINTAAN BARANG -->
+  <section id="view-minta" class="stack" data-pg="inv/minta">
+    <div class="kpis" id="mtKpis"></div>
+    <div class="two">
+      <div class="panel">
+        <div class="sec-h" style="margin-bottom:12px"><h2>Minta barang ke pusat</h2><span class="hint">diproses Head of admin</span></div>
+        <form id="mtForm" autocomplete="off">
+          <div class="fields">
+            <div class="field" id="mtCabF"><label for="mtCab">Cabang</label><select id="mtCab"></select></div>
+            <div class="field"><label for="mtButuh">Dibutuhkan tanggal (opsional)</label><input type="date" id="mtButuh"></div>
+          </div>
+          <label style="display:block;margin:12px 0 6px;font-weight:600;font-size:13px">Barang</label>
+          <datalist id="mtNames"></datalist>
+          <div id="mtRows" class="mt-rows"></div>
+          <button class="btn ghost" id="mtAdd" type="button" style="margin-top:6px">+ Tambah barang</button>
+          <div class="field full" style="margin-top:10px"><label for="mtKet">Catatan</label><input type="text" id="mtKet" maxlength="200" placeholder="Contoh: stok lem tinggal 1 botol"></div>
+          <div class="form-foot"><span class="note" id="mtMsg"></span><button class="btn primary" type="submit">Kirim permintaan</button></div>
+        </form>
+        <p class="note" style="margin:10px 0 0">Saat barang sampai, klik <b>Sudah diterima</b>: stok cabang otomatis bertambah (jurnal masuk). Tidak memengaruhi HPP / laporan keuangan.</p>
+      </div>
+      <div class="panel">
+        <div class="sec-h" style="margin-bottom:10px"><h2>Status permintaan</h2><select id="mtFilter" style="width:auto" aria-label="Filter status"><option value="aktif">Belum selesai</option><option value="telat">Terlambat</option><option value="">Semua</option><option value="diterima">Sudah diterima</option><option value="ditolak">Ditolak</option></select></div>
+        <div class="scroll"><table class="jr" id="mtList"></table></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- v1.1 · GRAFIK PEMAKAIAN -->
+  <section id="view-grafik" class="stack" data-pg="inv/stok/grafik">
+    <p class="note" id="grRO" hidden style="margin:0">Grafik pemakaian hanya bisa dibuka admin.</p>
+    <div class="stack" id="grBody">
+      <div class="panel">
+        <div class="jr-head"><div><span class="eyebrow">Persediaan · 6 bulan terakhir</span><h2 id="grTitle">Pemakaian barang</h2></div>
+          <div class="jr-tools"><select id="grCab" style="width:auto" aria-label="Cabang"></select><select id="grItem" style="width:auto" aria-label="Barang"></select></div></div>
+        <p class="note" id="grHint" style="margin:8px 0"></p>
+        <div class="legend" id="grLegend"></div>
+        <div class="scroll"><div id="grChart"></div></div>
+      </div>
+      <div class="two">
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:10px"><h2>Pemakaian per barang</h2>
+            <span style="display:flex;gap:6px"><select id="grRange" style="width:auto" aria-label="Rentang"><option value="1">Periode ini</option><option value="6">6 bulan</option></select><select id="grSort" style="width:auto" aria-label="Urutkan"><option value="qty">Terbanyak</option><option value="nama">Nama barang</option></select></span></div>
+          <div class="hbars" id="grRank"></div>
+        </div>
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:10px"><h2>Tabel</h2></div>
+          <div class="scroll"><table class="jr" id="grTable"></table></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STOK -->
+  <section id="view-stok" class="stack" data-pg="inv">
+    <div class="stack" id="pStok">
+    <div class="kpis admin-only" id="stKpis" data-pg="inv/stok/kartu"></div>
+
+    <div class="panel admin-only" data-pg="inv/stok/kartu">
+      <div class="jr-head">
+        <div><span class="eyebrow">Kartu stok periode</span><h2 id="ksTitle">Kartu stok</h2></div>
+        <div class="jr-tools"><select id="ksCabang" style="width:auto" aria-label="Pilih cabang"></select><button class="btn" id="stCsvBtn" hidden>Download CSV</button></div>
+      </div>
+      <p class="note" style="margin:10px 0 6px">Opening + Masuk − Keluar = Saldo. Saldo dibandingkan dengan hasil stock opname; selisih merah berarti stok fisik beda dengan catatan. Kalau opening periode ini belum diisi, dipakai hasil opname terakhir periode sebelumnya.</p>
+      <div class="scroll"><table class="stk" id="ksTable"></table></div>
+    </div>
+
+    <div class="panel admin-only" data-pg="inv/stok/posisi">
+      <div class="jr-head">
+        <div><span class="eyebrow">Stok terakhir semua cabang</span><h2 id="stTitle">Hasil stock opname</h2></div>
+      </div>
+      <p class="note" style="margin:10px 0 6px">Dari laporan stock opname terakhir tiap cabang sampai akhir periode yang dipilih. Merah = di bawah batas minimum.</p>
+      <div class="scroll"><table class="stk" id="stTable"></table></div>
+    </div>
+
+    <div class="op-wrap" data-pg="inv/stok/input">
+      <div class="ok-box" id="opOk" hidden>
+        <span class="ok-ic" aria-hidden="true">✓</span>
+        <div><b id="opOkTitle">Laporan terkirim</b><span id="opOkSub"></span></div>
+      </div>
+      <div class="panel">
+        <div class="seg seg-j" role="group" aria-label="Jenis laporan stok" style="margin:0 0 14px">
+          <button type="button" data-j="opening" aria-pressed="false">Opening stock</button>
+          <button type="button" data-j="jurnal" aria-pressed="false">Masuk / keluar</button>
+          <button type="button" data-j="opname" aria-pressed="true">Stock opname</button>
+        </div>
+        <div class="sec-h" style="margin-bottom:12px"><h2 id="opTitle">Laporan stock opname</h2><span class="op-prog" id="opProg"></span></div>
+        <div class="op-top">
+          <div class="field" id="oCabField"><label for="oCabang">Cabang</label><select id="oCabang"></select></div>
+          <div class="field"><label for="oTanggal" id="oTglLabel">Tanggal opname</label><input type="date" id="oTanggal"></div>
+        </div>
+        <div class="field" style="margin-bottom:12px"><label for="oPengisi">Nama pengisi</label><input type="text" id="oPengisi" class="pengisi" maxlength="40" placeholder="Nama kamu (tersimpan di HP ini)"></div>
+        <div class="scan" id="opScan" hidden>
+          <p><strong>Isi dari foto</strong>Foto lembar stok (tulisan tangan juga bisa), angka terisi otomatis. Cek lagi sebelum kirim.</p>
+          <label class="btn" for="opPhoto" id="opPhotoBtn">Pilih foto</label>
+          <input type="file" id="opPhoto" accept="image/*" hidden>
+        </div>
+        <p class="note" id="opHelp" style="margin:0 0 6px">Hitung fisik barang di cabang, lalu isi jumlahnya. Isi 0 kalau habis.</p>
+        <div id="opList"><div class="empty">Memuat daftar barang…</div></div>
+        <div class="field" style="margin-top:12px"><label for="oCatatan">Catatan (opsional)</label><textarea id="oCatatan" maxlength="300" placeholder="Contoh: 1 botol lem sudah kedaluwarsa, dibuang"></textarea></div>
+        <div class="form-foot" style="flex-direction:column;align-items:stretch">
+          <span class="note" id="opMsg"></span>
+          <button class="btn primary" id="opSave" type="button">Kirim laporan stock opname</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel admin-only" data-pg="inv/stok/riwayat">
+      <div class="sec-h" style="margin-bottom:10px"><h2>Riwayat laporan stok</h2><span class="hint" id="stHistHint"></span></div>
+      <div class="scroll"><table class="jr" id="stHist"></table></div>
+    </div>
+    </div>
+    <div class="stack admin-only" id="pAset" data-pg="inv/aset">
+      <div class="kpis" id="asKpis"></div>
+      <div class="panel">
+        <div class="jr-head">
+          <div><span class="eyebrow">Aset per lokasi</span><h2>Jumlah aset cabang & pusat</h2></div>
+          <div class="jr-tools"><button class="btn" id="asCsv" type="button" hidden>Download CSV</button></div>
+        </div>
+        <p class="note" style="margin:10px 0 6px">Angka = jumlah unit di lokasi itu. Merah kecil = unit rusak. Nilai dihitung dari jumlah × nilai per unit.</p>
+        <div class="scroll"><table class="stk" id="asMatrix"></table></div>
+      </div>
+      <div class="two">
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:12px"><h2 id="asFormTitle">Tambah aset</h2><span class="hint" id="asEditHint"></span></div>
+          <form id="asForm" autocomplete="off">
+            <div class="fields">
+              <div class="field"><label for="asLokasi">Lokasi</label><select id="asLokasi"></select></div>
+              <div class="field"><label for="asKat">Kategori</label><select id="asKat"></select></div>
+              <div class="field full"><label for="asNama">Nama aset</label><input type="text" id="asNama" list="asNames" maxlength="80" placeholder="Contoh: Kursi lash bed, AC 1 PK, Lampu ring"><datalist id="asNames"></datalist></div>
+              <div class="field"><label for="asQty">Jumlah unit</label><input type="text" id="asQty" inputmode="numeric" placeholder="0"></div>
+              <div class="field"><label for="asRusak">Rusak (dari jumlah)</label><input type="text" id="asRusak" inputmode="numeric" placeholder="0"></div>
+              <div class="field"><label for="asNilai">Nilai per unit</label><div class="rp"><span>Rp</span><input type="text" id="asNilai" inputmode="numeric" placeholder="0"></div></div>
+              <div class="field"><label for="asTgl">Tanggal beli</label><input type="date" id="asTgl"></div>
+              <div class="field full"><label for="asKet">Keterangan</label><input type="text" id="asKet" maxlength="140" placeholder="Opsional: merek, nomor seri, kondisi"></div>
+            </div>
+            <div class="form-foot"><span class="note" id="asMsg"></span><span style="display:flex;gap:8px"><button class="btn" id="asCancel" type="button" hidden>Batal edit</button><button class="btn primary" type="submit" id="asSave">Simpan aset</button></span></div>
+          </form>
+        </div>
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:10px"><h2>Daftar aset</h2><select id="asFilter" style="width:auto" aria-label="Filter lokasi"></select></div>
+          <div class="scroll"><table id="asList"></table></div>
+        </div>
+      </div>
+      <div class="two">
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:10px"><h2>Pemusnahan aset</h2><span class="hint" id="msHint"></span></div>
+          <p class="note" style="margin:0 0 10px">Aset rusak bisa dimusnahkan dari Daftar aset (tombol <b>Musnahkan</b>). Setiap pemusnahan menghasilkan Berita Acara Pemusnahan (PDF).</p>
+          <div class="scroll"><table class="jr" id="msList"></table></div>
+        </div>
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:10px"><h2>Piutang kasbon karyawan</h2><span class="hint" id="asKasbonHint"></span></div>
+          <p class="note" style="margin:0 0 10px">Kasbon dicatat sebagai aset (piutang), tidak masuk income statement. Berkurang otomatis dari potongan gaji di payroll.</p>
+          <div class="scroll"><table class="jr" id="asKasbon"></table></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PUSAT -->
+  <section id="view-pusat" class="stack" data-pg="acc/jurnal/pusat">
+    <p class="note" id="pusatRO" hidden style="margin:0">Halaman pengeluaran pusat hanya bisa dibuka admin.</p>
+    <div class="stack" id="pusatBody">
+      <div class="kpis" id="psKpis"></div>
+      <div class="two">
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:12px"><h2>Input pengeluaran pusat</h2></div>
+          <form id="pcForm" autocomplete="off">
+            <div class="fields">
+              <div class="field"><label for="pcKat">Kategori</label><select id="pcKat"></select></div>
+              <div class="field"><label for="pcTgl">Tanggal</label><input type="date" id="pcTgl"></div>
+              <div class="field"><label for="pcJml">Jumlah</label><div class="rp"><span>Rp</span><input type="text" id="pcJml" inputmode="numeric" placeholder="0"></div></div>
+              <div class="field"><label for="pcNota">No. bukti</label><input type="text" id="pcNota" maxlength="40" placeholder="Opsional"></div>
+              <div class="field full"><label for="pcKet">Keterangan</label><input type="text" id="pcKet" maxlength="140" placeholder="Contoh: ATK kantor, cicilan mobil operasional ke-8"></div>
+              <div class="field"><label for="pcDana">Dibayar dari</label><input type="text" id="pcDana" list="danaList" maxlength="30" placeholder="Contoh: Kas pusat, Koko"></div>
+              <div class="field"><label for="pcPengisi">Nama pengisi</label><input type="text" id="pcPengisi" class="pengisi" maxlength="40" placeholder="Nama kamu"></div>
+            </div>
+            <div class="scan" id="pcScanBox" hidden style="margin:14px 0 0"><p><strong>Scan nota pakai AI</strong>Foto nota/kuitansi, form terisi otomatis. Cek lagi sebelum simpan.</p><label class="btn" for="pcScan" id="pcScanBtn">Pilih foto nota</label><input type="file" id="pcScan" accept="image/*" hidden></div>
+            <div class="form-foot"><span class="note" id="pcMsg"></span><span style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn wa" id="pcWa" hidden target="_blank" rel="noopener">Kirim ke Owner (WA)</a><button class="btn primary" type="submit">Simpan</button></span></div>
+          </form>
+        </div>
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:10px"><h2>Per kategori</h2><span class="hint" id="psSumHint"></span></div>
+          <div class="scroll"><table id="psSum"></table></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="jr-head"><div><span class="eyebrow">Jurnal pengeluaran pusat</span><h2 id="jpTitle">Pusat</h2></div></div>
+        <div class="scroll"><table class="jr" id="jpTable"></table></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HRD DIVISION -->
+  <section id="view-hrd" class="stack" data-pg="hrd">
+    <p class="note" id="hrdRO" hidden style="margin:0">HRD Division hanya bisa dibuka admin.</p>
+    <div class="stack" id="hrdBody">
+    <div class="stack" id="hrd-karyawan" data-pg="hrd/karyawan">
+      <div class="panel">
+        <div class="sec-h" style="margin-bottom:6px"><h2>Data karyawan</h2><span class="hint" id="kyHint"></span></div>
+        <p class="note" style="margin:0 0 10px">Dipakai untuk link check-in absensi, payroll, KPI, dan cek slip. Karyawan yang keluar cukup dinonaktifkan supaya riwayatnya tetap ada.</p>
+        <div class="scroll"><table class="pr" id="kyTable"></table></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px">
+          <button class="btn" id="kyAdd" type="button">+ Tambah karyawan</button>
+          <button class="btn primary" id="kySave" type="button">Simpan data karyawan</button>
+          <button class="btn" id="kyFromPr" type="button">Ambil dari payroll</button>
+          <span class="note" id="kyMsg"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stack" id="hrd-absensi" data-pg="hrd/absensi">
+      <div class="kpis" id="abKpis"></div>
+      <div class="panel">
+        <div class="jr-head">
+          <div><span class="eyebrow">Absensi · bisa dikoreksi pusat</span><h2 id="abTitle">Absensi</h2></div>
+          <div class="jr-tools"><select id="abCabang" style="width:auto" aria-label="Pilih cabang"></select><button class="btn" id="abCsv" type="button" hidden>Download CSV</button></div>
+        </div>
+        <p class="note" style="margin:10px 0 8px">Klik kotak tanggal untuk koreksi. <b>H</b> hadir · <b>T</b> telat · <b>I</b> izin · <b>S</b> sakit · <b>C</b> cuti · <b>A</b> alpha · <b>L</b> libur · titik = belum ada data.</p>
+        <div class="scroll"><table class="ab" id="abTable"></table></div>
+      </div>
+      <div class="panel" id="abEdit" hidden>
+        <div class="sec-h" style="margin-bottom:12px"><h2 id="abEditTitle">Koreksi absensi</h2><button class="btn ghost" id="abClose" type="button">Tutup</button></div>
+        <div class="fields fields-3 cfg-f">
+          <div class="field"><label for="abStatus">Status</label><select id="abStatus"><option value="H">Hadir</option><option value="I">Izin</option><option value="S">Sakit</option><option value="C">Cuti</option><option value="A">Alpha</option><option value="L">Libur</option></select></div>
+          <div class="field"><label for="abMasuk">Jam masuk</label><input type="time" id="abMasuk"></div>
+          <div class="field"><label for="abPulang">Jam pulang</label><input type="time" id="abPulang"></div>
+          <div class="field"><label for="abKet">Keterangan</label><input type="text" id="abKet" maxlength="140" placeholder="Contoh: izin keluarga, surat dokter"></div>
+          <div class="field"><label for="abBy">Dikoreksi oleh</label><input type="text" id="abBy" class="pengisi" maxlength="40" placeholder="Nama kamu"></div>
+        </div>
+        <p class="note" id="abEditInfo" style="margin:10px 0 0"></p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px">
+          <button class="btn primary" id="abSave" type="button">Simpan koreksi</button>
+          <button class="btn danger" id="abDel" type="button">Hapus data hari ini</button>
+          <span class="note" id="abMsg"></span>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="sec-h" style="margin-bottom:6px"><h2>Link check-in per cabang</h2><span class="hint">taruh di HP cabang</span></div>
+        <p class="note" style="margin:0 0 10px">Karyawan buka link ini di HP cabang, pilih nama, lalu tap Masuk dan Pulang. Jam tercatat otomatis dan langsung masuk ke rekap di atas.</p>
+        <div id="abLinks"></div>
+      </div>
+    </div>
+
+  <div class="stack" id="hrd-payroll" data-pg="hrd/payroll">
+    <p class="note" id="prRO" hidden style="margin:0">Payroll hanya bisa dibuka admin.</p>
+    <div class="stack" id="prBody">
+      <div class="kpis" id="prKpis"></div>
+      <div class="panel">
+        <div class="jr-head">
+          <div><span class="eyebrow">Lembar payroll</span><h2 id="prTitle">Payroll</h2></div>
+          <div class="jr-tools"><span class="pill" id="prStatus"></span><button class="btn" id="prCopy" type="button">Salin dari periode lalu</button><button class="btn" id="prCsv" type="button" hidden>Download CSV</button></div>
+        </div>
+        <p class="note" style="margin:10px 0 6px">Gaji ditransfer = gaji pokok + tunjangan + bonus + komisi + KPI (dari halaman KPI) − potongan lain. Di tutup buku, komisi masuk "Commision Expenses", sisanya "Salary Expenses". Kolom KPI otomatis terisi setelah penilaian KPI disimpan.</p>
+        <div class="scroll"><table class="pr" id="prTable"></table></div>
+        <p class="note" id="prAlloc" style="margin:10px 0 0"></p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px">
+          <button class="btn" id="prAdd" type="button">+ Tambah karyawan</button>
+          <button class="btn" id="prFromKy" type="button">Ambil dari data karyawan</button>
+          <button class="btn" id="prAbs" type="button">Isi absensi otomatis</button>
+          <button class="btn primary" id="prSave" type="button">Simpan payroll</button>
+          <button class="btn" id="prFinal" type="button">Tandai sudah dibayar</button>
+          <span class="note" id="prMsg"></span>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI -->
+  <div class="stack" id="hrd-kpi" data-pg="hrd/kpi">
+    <p class="note" id="kpiRO" hidden style="margin:0">Penilaian KPI hanya bisa dibuka admin (MOD, Trainer, Owner).</p>
+    <div class="stack" id="kpiBody">
+      <div class="panel">
+        <div class="sec-h" style="margin-bottom:10px"><h2 id="kpiListTitle">Penilaian KPI</h2><span class="hint" id="kpiRule"></span></div>
+        <div class="scroll"><table id="kpiList"></table></div>
+      </div>
+      <div class="panel" id="kpiSheetPanel" hidden>
+        <div class="jr-head">
+          <div><span class="eyebrow" id="kpiSheetEyebrow">Penilaian KPI</span><h2 id="kpiSheetTitle">–</h2></div>
+          <div class="jr-tools"><button class="btn ghost" id="kpiClose" type="button">Tutup</button></div>
+        </div>
+        <p class="note" style="margin:10px 0 0">Poin didapat kalau <b>MOD, Trainer, dan Owner</b> semuanya centang Yes. Tiap penilai cukup isi kolomnya sendiri.</p>
+        <div class="scroll" style="margin-top:8px"><table class="kpi-t" id="kpiTable"></table></div>
+        <div class="two" style="margin-top:14px">
+          <div class="stack" style="gap:10px">
+            <div class="field"><label>Komplain periode ini</label><div id="kpiKomplain"></div><button class="btn" id="kpiAddKomplain" type="button" style="margin-top:6px;align-self:flex-start">+ Tambah komplain</button></div>
+            <label class="chk" for="kpiReview"><input type="checkbox" id="kpiReview"> Kirim Google review periode ini</label>
+          </div>
+          <div class="kpi-sum" id="kpiSum"></div>
+        </div>
+        <div class="kpi-com">
+          <div class="field"><label for="kcMod">Komentar MOD (Manager on Duty)</label><input type="text" id="knMod" class="kpi-nm" placeholder="Nama MOD" maxlength="40"><textarea id="kcMod" maxlength="600" placeholder="Komentar untuk karyawan"></textarea></div>
+          <div class="field"><label for="kcTrainer">Komentar Trainer</label><input type="text" id="knTrainer" class="kpi-nm" placeholder="Nama trainer" maxlength="40"><textarea id="kcTrainer" maxlength="600" placeholder="Komentar untuk karyawan"></textarea></div>
+          <div class="field"><label for="kcOwner">Komentar Owner</label><input type="text" id="knOwner" class="kpi-nm" placeholder="Nama owner" maxlength="40"><textarea id="kcOwner" maxlength="600" placeholder="Komentar untuk karyawan"></textarea></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px">
+          <button class="btn primary" id="kpiSave" type="button">Simpan penilaian</button>
+          <span class="note" id="kpiMsg"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stack" id="hrd-kasbon" data-pg="hrd/kasbon">
+    <p class="note" id="kbRO" hidden style="margin:0">Kasbon hanya bisa dibuka admin / HRD.</p>
+    <div class="stack" id="kbBody">
+      <div class="kpis" id="kbKpis"></div>
+      <div class="two">
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:12px"><h2>Catat kasbon / pengembalian</h2></div>
+          <form id="kbForm" autocomplete="off">
+            <div class="fields">
+              <div class="field"><label for="kbTipe">Jenis</label><select id="kbTipe"><option value="pinjam">Kasbon (pinjam)</option><option value="bayar">Pengembalian langsung</option></select></div>
+              <div class="field"><label for="kbEmp">Karyawan</label><select id="kbEmp"></select></div>
+              <div class="field"><label for="kbTgl">Tanggal</label><input type="date" id="kbTgl"></div>
+              <div class="field"><label for="kbJml">Jumlah</label><div class="rp"><span>Rp</span><input type="text" id="kbJml" inputmode="numeric" placeholder="0"></div></div>
+              <div class="field" id="kbRekF"><label for="kbRek">Diberikan dari</label><select id="kbRek"></select></div>
+              <div class="field" id="kbCicilF"><label for="kbCicil">Potong gaji per bulan</label><div class="rp"><span>Rp</span><input type="text" id="kbCicil" inputmode="numeric" placeholder="kosong = lunas bulan depan"></div></div>
+              <div class="field" id="kbCaraF" hidden><label for="kbCara">Cara bayar</label><select id="kbCara"><option>Transfer ke rekening pusat</option><option>Tunai</option></select></div>
+              <div class="field full"><label for="kbKet">Keterangan</label><input type="text" id="kbKet" maxlength="160" placeholder="Opsional"></div>
+            </div>
+            <div class="form-foot"><span class="note" id="kbMsg"></span><button class="btn primary" type="submit">Simpan</button></div>
+          </form>
+          <p class="note" style="margin:10px 0 0">Potongan kasbon diisi di HRD → Payroll kolom <b>Pot. kasbon</b> (otomatis terisi cicilan). Saat payroll ditandai dibayar, sisa kasbon berkurang.</p>
+        </div>
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:10px"><h2>Kasbon per karyawan</h2></div>
+          <div class="scroll"><table class="jr" id="kbTable"></table></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="sec-h" style="margin-bottom:10px"><h2>Riwayat kasbon</h2></div>
+        <div class="scroll"><table class="jr" id="kbHist"></table></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stack" id="hrd-umum" data-pg="hrd/umum">
+    <p class="note" id="umRO" hidden style="margin:0">Pengumuman hanya bisa dibuat admin / HRD.</p>
+    <div class="two" id="umBody">
+      <div class="panel">
+        <div class="sec-h" style="margin-bottom:12px"><h2>Buat pengumuman</h2></div>
+        <form id="umForm" autocomplete="off">
+          <div class="fields">
+            <div class="field"><label for="umMode">Kirim ke</label><select id="umMode"><option value="semua">Semua karyawan aktif</option><option value="cabang">Per cabang</option><option value="pilih">Pilih karyawan</option></select></div>
+            <div class="field" id="umCabF" hidden><label for="umCab">Cabang (bisa pilih lebih dari satu)</label><select id="umCab" multiple size="4"></select></div>
+          </div>
+          <div class="um-pick" id="umPick" hidden></div>
+          <div class="field full" style="margin-top:10px"><label for="umJudul">Judul</label><input type="text" id="umJudul" maxlength="120" placeholder="Contoh: Jadwal libur Lebaran"></div>
+          <div class="field full" style="margin-top:10px"><label for="umIsi">Pesan</label><textarea id="umIsi" rows="6" maxlength="3000"></textarea></div>
+          <div class="um-ch"><label class="chk sm"><input type="checkbox" id="umEmail" checked> Email</label><label class="chk sm"><input type="checkbox" id="umTg" checked> Telegram</label><label class="chk sm"><input type="checkbox" id="umWa" checked> WhatsApp (buka daftar kirim)</label></div>
+          <p class="note" id="umCount" style="margin:8px 0 0"></p>
+          <div class="form-foot"><span class="note" id="umMsg"></span><button class="btn primary" type="submit">Kirim pengumuman</button></div>
+        </form>
+      </div>
+      <div class="panel">
+        <div class="sec-h" style="margin-bottom:10px"><h2>Riwayat pengumuman</h2></div>
+        <div id="umList" class="stack" style="gap:10px"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stack" id="hrd-slip" data-pg="hrd/slip">
+    <div class="panel">
+      <div class="sec-h" style="margin-bottom:12px"><h2>Cek slip gaji</h2><span class="hint" id="csHint"></span></div>
+      <div class="op-top" style="max-width:560px">
+        <div class="field"><label for="csEmp">Karyawan</label><select id="csEmp"></select></div>
+        <div class="field"><label for="csQ">Cari nama</label><input type="text" id="csQ" placeholder="Ketik nama" maxlength="40"></div>
+      </div>
+      <div class="scroll" style="margin-top:6px"><table id="csTable"></table></div>
+      <p class="note" id="csMsg" style="margin:10px 0 0"></p>
+    </div>
+  </div>
+      <div data-pg="hrd/payroll hrd/slip"><div class="panel" id="slipPanel" hidden>
+        <div class="sec-h" style="margin-bottom:12px"><h2 id="slipTitle">Slip gaji</h2>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn primary" id="slipPng" type="button">Download gambar</button>
+            <button class="btn" id="slipSend" type="button" hidden>Kirim…</button><a class="btn wa" id="slipWa" hidden target="_blank" rel="noopener">Kirim via WA</a>
+            <button class="btn" id="slipTxt" type="button">Salin teks WA</button>
+            <button class="btn ghost" id="slipClose" type="button">Tutup</button>
+          </div>
+        </div>
+        <div class="slip-wrap"><div id="slip" class="slip"></div></div>
+        <p class="note" id="slipMsg" style="margin:10px 0 0"></p>
+    </div></div>
+  </section>
+
+  <!-- ABSENSI (link check-in cabang) -->
+  <section id="view-absen" class="stack" data-pg="absen">
+    <div class="ok-box" id="abOk" hidden>
+      <span class="ok-ic" aria-hidden="true">✓</span>
+      <div><b id="abOkTitle">Tercatat</b><span id="abOkSub"></span></div>
+    </div>
+    <div class="panel">
+      <div class="sec-h" style="margin-bottom:6px"><h2 id="abToday">Hari ini</h2><span class="num ab-clock" id="abClock"></span></div>
+      <p class="note" style="margin:0 0 10px">Cari nama kamu, tap <b>Masuk</b> saat datang dan <b>Pulang</b> saat selesai kerja. Jam tercatat otomatis.</p>
+      <div id="abList"><div class="empty">Memuat daftar karyawan…</div></div>
+    </div>
+    <p class="note" style="text-align:center;margin:0">Salah tap atau lupa absen? Hubungi admin pusat untuk koreksi.</p>
+    <div class="sheet" id="abSheet" hidden>
+      <div class="sheet-in">
+        <b id="abSheetTitle"></b>
+        <span class="note" id="abSheetSub"></span>
+        <div style="display:flex;gap:10px;margin-top:14px"><button class="btn" id="abNo" type="button" style="flex:1;justify-content:center">Batal</button><button class="btn primary" id="abYes" type="button" style="flex:2;justify-content:center;padding:13px">Ya, catat</button></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- v1.1 · DASHBOARD MOBILE -->
+  <section id="view-mobile" class="stack" data-pg="dash/mobile">
+    <p class="note" id="mbRO" hidden style="margin:0">Dashboard hanya bisa dibuka admin.</p>
+    <div class="two mb-two" id="mbBody">
+      <div class="panel mb-panel">
+        <div class="sec-h" style="margin-bottom:12px"><h2>Preview di HP</h2>
+          <div class="seg2" id="mbDev" role="group" aria-label="Pilih HP"><button type="button" data-mbdev="ios" aria-pressed="true">iPhone</button><button type="button" data-mbdev="android" aria-pressed="false">Android</button></div></div>
+        <div class="mb-frame" id="mbFrame" data-dev="ios"><div class="mb-notch" aria-hidden="true"></div><div class="mb-screen" id="mbScreen"></div></div>
+      </div>
+      <div class="panel">
+        <div class="sec-h" style="margin-bottom:10px"><h2>Pasang di HP</h2><span class="hint">tanpa App Store / Play Store</span></div>
+        <p class="note" style="margin:0 0 10px">Lash Bounty ERP bisa dipasang seperti aplikasi. Tampilannya otomatis menyesuaikan layar HP, dan login tetap pakai akun masing-masing.</p>
+        <div class="links-row"><b>Link aplikasi</b><code id="mbUrl"></code><span id="mbQr"></span></div>
+        <p class="note" id="mbHttps" hidden style="margin:8px 0 0">Untuk dipasang di HP, aplikasi harus dibuka lewat alamat <b>https://</b> (setelah di-hosting di cloud). Di jaringan kantor tanpa https, tetap bisa dibuka di browser HP.</p>
+        <div class="mb-steps">
+          <div><b>iPhone (Safari)</b><ol><li>Buka link di <b>Safari</b> (scan QR).</li><li>Tap tombol <b>Bagikan</b> (kotak dengan panah ke atas).</li><li>Pilih <b>Tambahkan ke Layar Utama</b> → <b>Tambah</b>.</li></ol></div>
+          <div><b>Android (Chrome)</b><ol><li>Buka link di <b>Chrome</b> (scan QR).</li><li>Tap menu <b>⋮</b> di kanan atas.</li><li>Pilih <b>Instal aplikasi</b> / <b>Tambahkan ke layar utama</b>.</li></ol></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- v1.1 · IMPORT AI -->
+  <section id="view-aiimp" class="stack" data-pg="acc/impor/ai">
+    <p class="note" id="aiRO" hidden style="margin:0">Import AI hanya bisa dibuka admin.</p>
+    <div class="stack" id="aiBody">
+      <div class="panel">
+        <div class="jr-head"><div><span class="eyebrow">Import AI · tutup buku & omzet bulan-bulan sebelumnya</span><h2>Ngobrol dengan AI untuk memasukkan data lama</h2></div><div class="jr-tools"><button class="btn ghost" id="aiReset" type="button">Mulai ulang</button></div></div>
+        <ol class="steps" style="margin-top:10px">
+          <li><b>Upload file</b> laporan lama: PDF, Excel, CSV, atau foto (boleh beberapa sekaligus).</li>
+          <li><b>Jawab pertanyaan AI</b> sampai semua jelas (cabang, periode, kategori). AI mengecek totalnya dengan angka di file.</li>
+          <li><b>Cek tabel usulan</b>, hilangkan centang yang tidak perlu, lalu klik <b>Masukkan ke sistem</b>.</li>
+        </ol>
+        <p class="note" id="aiOff" hidden>AI belum aktif di server. Isi <code>ANTHROPIC_API_KEY</code> di file <code>.env</code>, lalu jalankan ulang server.</p>
+        <label class="drop" id="aiDrop" for="aiFile"><b>Pilih file laporan</b><span>PDF, Excel (.xlsx), CSV, atau foto · tarik file ke sini</span></label>
+        <input type="file" id="aiFile" accept=".pdf,.xlsx,.xls,.xlsm,.csv,.txt,image/png,image/jpeg,image/webp" multiple hidden>
+        <div class="file-pills" id="aiFiles"></div>
+        <div class="ask-log ai-log" id="aiLog" aria-live="polite"></div>
+        <form class="ask-form" id="aiForm"><textarea id="aiIn" rows="2" maxlength="4000" placeholder="Tulis jawaban atau instruksi, contoh: ini tutup buku November 2025 semua cabang"></textarea><button class="btn primary" id="aiSend" type="submit">Kirim</button></form>
+      </div>
+      <div class="panel" id="aiPropPanel" hidden>
+        <div class="sec-h" style="margin-bottom:6px"><h2>Usulan data dari AI</h2><span class="hint" id="aiPropHint"></span></div>
+        <p class="note" id="aiPropSum" style="margin:0 0 10px;white-space:pre-line"></p>
+        <div class="scroll"><table class="jr" id="aiProp"></table></div>
+        <div class="form-foot"><span class="note">Data masuk sebagai omzet "Import", biaya cabang / pusat, payroll, dan gaji owner. Bisa dikoreksi lagi di Tutup Buku → Edit & Penyesuaian.</span><button class="btn primary" id="aiApply" type="button" disabled>Masukkan ke sistem</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- v1.1 · REFUND -->
+  <section id="view-refund" class="stack" data-pg="acc/refund">
+    <p class="note" id="rfRO" hidden style="margin:0">Refund hanya bisa dibuka admin.</p>
+    <div class="stack" id="rfBody">
+      <div class="kpis" id="rfKpis"></div>
+      <div class="two">
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:12px"><h2>Ajukan refund</h2><span class="hint">perlu konfirmasi owner</span></div>
+          <form id="rfForm" autocomplete="off">
+            <div class="fields">
+              <div class="field"><label for="rfTgl">Tanggal</label><input type="date" id="rfTgl"></div>
+              <div class="field"><label for="rfCab">Cabang</label><select id="rfCab"></select></div>
+              <div class="field"><label for="rfCust">Nama customer</label><input type="text" id="rfCust" maxlength="60"></div>
+              <div class="field"><label for="rfHp">No. HP customer</label><input type="text" id="rfHp" inputmode="tel" maxlength="20" placeholder="08xx"></div>
+              <div class="field"><label for="rfAlasan">Alasan</label><select id="rfAlasan"></select></div>
+              <div class="field"><label for="rfJml">Jumlah refund</label><div class="rp"><span>Rp</span><input type="text" id="rfJml" inputmode="numeric" placeholder="0"></div></div>
+              <div class="field full"><label for="rfKet">Keterangan</label><input type="text" id="rfKet" maxlength="160" placeholder="Contoh: transfer dobel tgl 12, bukti di WA"></div>
+              <div class="field"><label for="rfBank">Bank tujuan</label><input type="text" id="rfBank" maxlength="30" placeholder="BCA"></div>
+              <div class="field"><label for="rfNorek">No. rekening</label><input type="text" id="rfNorek" inputmode="numeric" maxlength="30"></div>
+              <div class="field full"><label for="rfAn">Atas nama</label><input type="text" id="rfAn" maxlength="60"></div>
+            </div>
+            <label class="chk sm" style="margin-top:8px"><input type="checkbox" id="rfBiaya"> Catat sebagai biaya "Refund customer" cabang saat ditransfer (garansi / lainnya)</label>
+            <div class="form-foot"><span class="note" id="rfMsg"></span><button class="btn primary" type="submit">Ajukan ke owner</button></div>
+          </form>
+        </div>
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:10px"><h2>Daftar refund</h2><select id="rfFilter" style="width:auto" aria-label="Filter status"><option value="">Semua status</option><option value="diajukan">Menunggu owner</option><option value="disetujui">Siap ditransfer</option><option value="ditransfer">Sudah ditransfer</option><option value="ditolak">Ditolak</option></select></div>
+          <p class="note" id="rfOwnerNote" style="margin:0 0 8px">Persetujuan refund hanya bisa dilakukan Owner. Owner otomatis dapat notifikasi Telegram / email.</p>
+          <div class="scroll"><table class="jr" id="rfList"></table></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMPORT CSV -->
+  <section id="view-impor" class="stack" data-pg="acc/impor/csv">
+    <p class="note" id="imRO" hidden style="margin:0">Import CSV hanya bisa dibuka admin.</p>
+    <div class="stack" id="imBody">
+      <div class="panel">
+        <div class="sec-h" style="margin-bottom:10px"><h2>Import data dari CSV / Excel / PDF</h2><span class="hint">input banyak data sekaligus</span></div>
+        <ol class="steps">
+          <li><b>Pilih jenis data</b> yang mau di-import.</li>
+          <li><b>Download template</b>, isi di Excel atau Google Sheet, lalu simpan sebagai CSV (File → Download → CSV).</li>
+          <li><b>Upload file</b>, cek hasilnya di tabel, lalu klik Import. Baris yang salah tidak ikut masuk.</li>
+        </ol>
+        <div class="op-top" style="max-width:640px;align-items:end">
+          <div class="field"><label for="imType">Jenis data</label><select id="imType"></select></div>
+          <div class="field"><button class="btn" id="imTpl" type="button" style="justify-content:center">Download template</button></div>
+        </div>
+        <div id="imGuide"></div>
+        <label class="drop" id="imDrop" for="imFile"><b>Pilih file CSV, Excel, PDF, atau foto</b><span>atau tarik file ke sini · PDF & foto dibaca AI sesuai kolom template</span></label>
+        <input type="file" id="imFile" accept=".csv,text/csv,.xlsx,.xls,.xlsm,.pdf,application/pdf,image/png,image/jpeg,image/webp" hidden>
+        <div id="imPreview"></div>
+        <div class="form-foot"><span class="note" id="imMsg"></span><button class="btn primary" id="imGo" type="button" disabled>Import</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TUTUP BUKU -->
+  <section id="view-tutup" class="stack" data-pg="acc/tutup">
+    <p class="note" id="tbRO" hidden style="margin:0">Tutup buku hanya bisa dibuka admin.</p>
+    <div class="stack" id="tbBody">
+    <div class="stack" data-pg="acc/tutup/cek">
+      <div class="panel">
+        <div class="jr-head">
+          <div><span class="eyebrow">Tutup buku · cut-off tanggal 26</span><h2 id="tbTitle">Tutup buku</h2></div>
+          <div class="jr-tools"><span class="pill" id="tbStatus"></span><button class="btn" id="tbCsv" type="button" hidden>Download laporan</button></div>
+        </div>
+        <p class="note" id="tbNote" style="margin:10px 0 8px"></p>
+        <div id="tbCheck"></div>
+      </div>
+      <div class="panel" id="tbSpanPanel" hidden>
+        <div class="sec-h" style="margin-bottom:10px"><h2 id="tbSpanTitle">Status per bulan</h2></div>
+        <div class="scroll"><table id="tbSpan"></table></div>
+      </div>
+      <div class="two">
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:10px"><h2>Laba rugi Global</h2><span class="hint" id="tbPLHint"></span></div>
+          <div class="scroll"><table class="pl" id="tbPL"></table></div>
+        </div>
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:10px"><h2>Per cabang</h2><span class="hint">omzet − pengeluaran cabang (termasuk payroll)</span></div>
+          <div class="scroll"><table id="tbCab"></table></div>
+        </div>
+      </div>
+      <div class="panel" id="tbAct">
+        <div class="sec-h" style="margin-bottom:12px"><h2 id="tbActTitle">Tutup buku</h2><span class="pill" id="tbStage"></span></div>
+        <ol class="tb-steps" id="tbSteps">
+          <li data-st="1"><b>Pre-final</b><span>hitung semua sebelum gaji owner</span></li>
+          <li data-st="2"><b>Gaji owner</b><span>diinput Head of admin</span></li>
+          <li data-st="3"><b>Final</b><span>tutup buku & kunci data</span></li>
+        </ol>
+        <div id="tbPreBox" class="tb-box"></div>
+        <div class="tb-prev" id="tbPrev">
+          <span class="note">Preview laporan:</span>
+          <button class="btn" type="button" data-nav="acc/tutup/simple">Simple</button>
+          <button class="btn" type="button" data-nav="acc/tutup/wendy">Cabang Wendy</button>
+          <button class="btn" type="button" data-nav="acc/tutup/global">Global</button>
+          <button class="btn" type="button" data-nav="acc/tutup/expert">Expertise</button>
+        </div>
+        <div id="tbGajiRow" style="margin-top:12px">
+          <div class="fields fields-3 cfg-f" id="tbGajiList"></div>
+          <div class="fields cfg-f" style="max-width:720px;margin-top:10px">
+            <div class="field"><label for="tbKet">Catatan (opsional)</label><input type="text" id="tbKet" maxlength="200" placeholder="Contoh: sudah dicek Yuli"></div>
+          </div>
+        </div>
+        <div class="fields cfg-f" id="tbRevRow" style="max-width:720px;margin-top:12px" hidden>
+          <div class="field"><label for="tbAlasan">Alasan revisi (wajib kalau mau buka kembali)</label><input type="text" id="tbAlasan" maxlength="200" placeholder="Contoh: omzet Pluit tgl 12 salah input"></div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px">
+          <button class="btn primary" id="tbPre" type="button">Hitung pre-final</button>
+          <button class="btn primary" id="tbGajiSave" type="button">Simpan gaji owner</button>
+          <button class="btn primary" id="tbClose" type="button">Tutup buku final</button>
+          <button class="btn" id="tbOpen" type="button" hidden>Buka untuk revisi</button>
+          <span class="note" id="tbMsg"></span>
+        </div>
+        <div id="tbTodo" class="tb-todo" hidden></div>
+        <div id="tbHist" hidden></div>
+      </div>
+    </div>
+
+    <div class="stack" data-pg="acc/tutup/edit">
+      <div class="panel">
+        <div class="jr-head"><div><span class="eyebrow">Tutup buku · koreksi sebelum final</span><h2 id="teTitle">Edit & penyesuaian</h2></div></div>
+        <p class="note tb-lock" id="teLock" hidden></p>
+        <div class="kpis" id="teSum" style="margin-top:10px"></div>
+      </div>
+      <div class="two">
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:8px"><h2>Talk to AI</h2><button class="btn ghost" id="teReset" type="button">Mulai ulang</button></div>
+          <p class="note" id="teOff" hidden style="margin:0 0 8px">AI belum aktif di server. Pakai edit manual di bawah.</p>
+          <div class="ask-log te-log" id="teLog" aria-live="polite"></div>
+          <form class="ask-form" id="teForm"><textarea id="teIn" rows="2" maxlength="2000" placeholder="Contoh: listrik Tebet harusnya 2.350.000"></textarea><button class="btn primary" id="teSend" type="submit">Kirim</button></form>
+          <div id="teOpsPanel" hidden style="margin-top:12px">
+            <div class="sec-h" style="margin-bottom:6px"><h2 style="font-size:15px">Usulan perubahan</h2></div>
+            <div class="scroll"><table class="jr" id="teOps"></table></div>
+            <div class="form-foot"><span class="note">Semua perubahan tercatat di Riwayat perubahan.</span><button class="btn primary" id="teApply" type="button" disabled>Terapkan</button></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:12px"><h2>Tambah penyesuaian manual</h2></div>
+          <form id="taForm" autocomplete="off">
+            <div class="fields">
+              <div class="field"><label for="taJenis">Jenis</label><select id="taJenis"><option value="biaya">Biaya (cabang / pusat)</option><option value="omzet">Omzet / pemasukan</option></select></div>
+              <div class="field"><label for="taCab">Cabang</label><select id="taCab"></select></div>
+              <div class="field"><label for="taKat">Kategori</label><select id="taKat"></select></div>
+              <div class="field"><label for="taTgl">Tanggal</label><input type="date" id="taTgl"></div>
+              <div class="field full"><label for="taKet">Keterangan / alasan</label><input type="text" id="taKet" maxlength="160" placeholder="Contoh: koreksi tagihan listrik Oktober"></div>
+              <div class="field"><label for="taJml">Jumlah</label><div class="rp"><span>Rp</span><input type="text" id="taJml" inputmode="numeric" placeholder="0"></div></div>
+            </div>
+            <div class="form-foot"><span class="note" id="taMsg"></span><button class="btn primary" type="submit">Tambah penyesuaian</button></div>
+          </form>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="jr-head"><div><span class="eyebrow">Edit manual</span><h2>Transaksi periode ini</h2></div>
+          <div class="jr-tools"><select id="teF" style="width:auto" aria-label="Jenis"><option value="">Semua jenis</option><option value="sales">Omzet</option><option value="pusat">Biaya cabang / pusat</option><option value="expenses">Petty cash</option></select><select id="teC" style="width:auto" aria-label="Cabang"></select></div></div>
+        <p class="note" style="margin:8px 0" id="teHint"></p>
+        <div class="scroll"><table class="jr te-t" id="teTable"></table></div>
+        <p class="note" style="margin:8px 0 0">Gaji karyawan diubah di HRD → Payroll. Gaji owner diubah di Checklist & kunci.</p>
+      </div>
+    </div>
+    <div class="stack" data-pg="acc/tutup/riwayat">
+      <div class="panel">
+        <div class="jr-head"><div><span class="eyebrow">Arsip</span><h2>Riwayat tutup buku</h2></div><div class="jr-tools"><span class="hint" id="rwHint"></span></div></div>
+        <p class="note" style="margin:8px 0 10px">Klik nama laporan untuk membuka, atau <b>PDF</b> untuk mengunduh / mengirim beberapa laporan sekaligus.</p>
+        <div class="scroll"><table class="jr" id="rwTable"></table></div>
+      </div>
+    </div>
+    <div class="stack" data-pg="acc/tutup/simple acc/tutup/wendy acc/tutup/global acc/tutup/expert">
+      <div class="panel">
+        <div class="jr-head">
+          <div><span class="eyebrow" id="rpEyebrow">Laporan tutup buku</span><h2 id="rpTitle">Laporan</h2></div>
+          <div class="jr-tools">
+            <select id="rpCab" style="width:auto" aria-label="Pilih cabang"></select>
+            <select id="rpGrup" style="width:auto" aria-label="Pilih grup"></select>
+            <button class="btn" id="rpSend" type="button">Kirim…</button>
+            <button class="btn primary" id="rpPdf" type="button">Export PDF</button>
+          </div>
+        </div>
+        <p class="note" id="rpNote" style="margin:10px 0 0"></p>
+        <div id="rpTtd"></div>
+      </div>
+      <div class="paper-wrap"><div class="paper" id="paper"></div></div>
+      <div class="panel" id="hppPanel">
+        <div class="sec-h" style="margin-bottom:6px"><h2>Klasifikasi petty cash</h2><span class="hint" id="hppHint"></span></div>
+        <p class="note" style="margin:0 0 10px">Petty cash bahan treatment masuk <b>Cost of Good Sold (HPP)</b>, sisanya masuk <b>Belanja keperluan cabang</b>. Sudah ditebak otomatis dari nama barang; klik untuk mengubah. Tanda * = tebakan otomatis.</p>
+        <div class="scroll"><table class="jr" id="hppTable"></table></div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+
+
+  <!-- v1.1 · AKUN SAYA -->
+  <section id="view-akun" class="stack" data-pg="set/akun">
+    <div class="panel"><div class="sec-h"><h2>Akun saya</h2></div><p style="margin:8px 0 0" id="akInfo"></p></div>
+    <div class="two">
+      <div class="panel">
+        <div class="sec-h" style="margin-bottom:12px"><h2>Ganti password</h2></div>
+        <form id="akPwForm" autocomplete="off">
+          <div class="fields">
+            <div class="field full"><label for="akPwOld">Password lama</label><input type="password" id="akPwOld" autocomplete="current-password"></div>
+            <div class="field"><label for="akPw1">Password baru</label><input type="password" id="akPw1" autocomplete="new-password" placeholder="min. 8 karakter, huruf & angka"></div>
+            <div class="field"><label for="akPw2">Ulangi password baru</label><input type="password" id="akPw2" autocomplete="new-password"></div>
+          </div>
+          <div class="form-foot"><span class="note" id="akPwMsg"></span><button class="btn primary" type="submit">Ganti password</button></div>
+        </form>
+      </div>
+      <div class="panel">
+        <div class="sec-h" style="margin-bottom:8px"><h2>Tanda tangan</h2><span class="hint">dipakai di laporan & berita acara</span></div>
+        <div class="ak-now" id="akTtdNow"></div>
+        <canvas class="ak-pad" id="akPad" aria-label="Kotak tanda tangan, gambar dengan jari atau mouse"></canvas>
+        <div class="form-foot"><span class="note" id="akTtdMsg"></span><span style="display:flex;gap:8px;flex-wrap:wrap"><label class="btn ghost" for="akTtdFile">Upload foto</label><input type="file" id="akTtdFile" accept="image/png,image/jpeg,image/webp" hidden><button class="btn ghost" id="akPadClear" type="button">Hapus</button><button class="btn primary" id="akTtdSave" type="button">Simpan tanda tangan</button></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- v1.1 · INTEGRASI -->
+  <section id="view-integ" class="stack" data-pg="set/integrasi">
+    <p class="note" id="igRO" hidden style="margin:0">Integrasi hanya bisa dibuka admin.</p>
+    <div class="stack" id="igBody">
+      <div class="panel">
+        <div class="jr-head"><div><span class="eyebrow">Telegram · Email · Google Sheet · Backup</span><h2>Integrasi & notifikasi</h2></div><div class="jr-tools"><button class="btn ghost" id="igRefresh" type="button">Muat ulang</button></div></div>
+        <div class="ig-cards" id="igCards"></div>
+        <p class="note" style="margin:10px 0 0">Kunci & password integrasi disimpan di file <code>.env</code> server (bukan di aplikasi). Cara mengisi ada di README bagian "Integrasi".</p>
+        <div class="ig-act"><button class="btn" type="button" data-igtest="telegram">Tes Telegram</button><button class="btn" type="button" data-igtest="email">Tes email</button><button class="btn" type="button" data-igtest="reminder">Kirim pengingat sekarang</button><button class="btn" type="button" data-igtest="sheets">Sinkron Google Sheet</button><button class="btn" type="button" data-igtest="backup">Backup sekarang</button><a class="btn ghost" id="igSheetOpen" target="_blank" rel="noopener" hidden>Buka Google Sheet</a></div>
+        <p class="note" id="igMe" style="margin:6px 0 0"></p><p class="note" id="igSheetEmail" style="margin:4px 0 0"></p><p class="note" id="igMsg" style="margin:4px 0 0" aria-live="polite"></p>
+      </div>
+      <div class="two">
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:10px"><h2>Notifikasi yang dikirim</h2></div>
+          <div class="ig-ev" id="igEv"></div>
+          <div class="um-ch"><label class="chk sm"><input type="checkbox" id="igTgOff"> Matikan semua Telegram</label><label class="chk sm"><input type="checkbox" id="igMailOff"> Matikan semua email</label></div>
+          <div class="field" style="margin-top:10px"><label for="igExtra">Penerima tambahan notifikasi owner (email / chat ID Telegram, pisahkan koma)</label><input type="text" id="igExtra" maxlength="400"></div>
+          <div class="form-foot"><span class="note" id="igSaveMsg"></span><button class="btn primary" id="igSave" type="button">Simpan</button></div>
+        </div>
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:10px"><h2>Logo perusahaan</h2></div>
+          <div class="ig-brand"><img id="igBrandImg" alt="Logo saat ini"><div><p class="note" style="margin:0 0 8px">Dipakai di header aplikasi, laporan PDF, dan berita acara. PNG transparan / SVG paling bagus.</p>
+            <label class="btn" for="brLogoFile">Upload logo</label><input type="file" id="brLogoFile" accept="image/png,image/jpeg,image/webp,image/svg+xml" hidden> <button class="btn ghost" id="brLogoReset" type="button">Pakai logo bawaan</button><p class="note" id="brMsg"></p></div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="sec-h" style="margin-bottom:10px"><h2>Chat Telegram</h2><span class="hint">orang yang sudah kirim /start ke bot</span></div>
+        <div class="scroll"><table class="jr" id="igTg"></table></div>
+      </div>
+      <div class="two">
+        <div class="panel"><div class="sec-h" style="margin-bottom:10px"><h2>Notifikasi terakhir</h2></div><div class="scroll"><table class="jr" id="igLog"></table></div></div>
+        <div class="panel"><div class="sec-h" style="margin-bottom:10px"><h2>Backup harian</h2></div><p class="note" style="margin:0 0 8px">Otomatis tiap hari jam 02:00, disimpan di folder <code>data/backups</code>. Pulihkan dengan <code>npm run restore</code>.</p><ul class="ig-bk" id="igBackups"></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PENGATURAN -->
+  <section id="view-atur" class="stack" data-pg="set">
+    <p class="note" id="aturRO" hidden style="margin:0">Hanya admin (Editor) yang bisa mengubah pengaturan. Kamu bisa lihat saja.</p>
+    <div class="two" data-pg="set/cabang">
+      <div class="panel">
+        <div class="sec-h" style="margin-bottom:12px"><h2>Daftar cabang</h2></div>
+        <div id="cabEdit"></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:4px">
+          <button class="btn" id="addCab" type="button">+ Tambah cabang</button>
+          <button class="btn primary" id="saveCfg" type="button">Simpan</button>
+          <span class="note" id="cfgMsg"></span>
+        </div>
+      </div>
+      <div class="panel" id="linkBox">
+        <div class="sec-h" style="margin-bottom:6px"><h2>Link khusus</h2><span class="hint">kirim ke masing-masing cabang</span></div>
+        <p class="note" style="margin:0 0 12px">Link cabang membuka input pengeluaran, stock opname, dan absensi cabang itu saja. Link absensi langsung membuka halaman check-in masuk/pulang. Link check-in bisa dibuka tanpa login.</p>
+        <div id="links"></div>
+      </div>
+    </div>
+    <div class="panel" data-pg="set/notif">
+      <div class="sec-h" style="margin-bottom:12px"><h2>Notifikasi & absensi</h2></div>
+      <div class="fields fields-3 cfg-f">
+        <div class="field"><label for="hrWa">No. WhatsApp owner</label><input type="text" id="hrWa" inputmode="tel" placeholder="Contoh: 0812xxxxxxx" maxlength="20"></div>
+        <div class="field"><label for="hrMin">Notif kalau pengeluaran di atas</label><div class="rp"><span>Rp</span><input type="text" id="hrMin" inputmode="numeric" placeholder="500.000"></div></div>
+        <div class="field"><label for="hrJam">Jam masuk kerja</label><input type="time" id="hrJam" value="10:00"></div>
+        <div class="field"><label for="hrTol">Toleransi telat (menit)</label><input type="text" id="hrTol" inputmode="numeric" placeholder="15"></div>
+        <div class="field"><label for="hrBhG">Grup bagi hasil (partner)</label><select id="hrBhG"></select></div>
+        <div class="field"><label for="hrBhP">Porsi partner (%)</label><input type="text" id="hrBhP" inputmode="numeric" placeholder="50"></div>
+        <div class="field"><label for="hrPartner">Nama partner (judul laporan)</label><input type="text" id="hrPartner" maxlength="40" placeholder="Wendy Walters"></div>
+        <div class="field"><label for="hrWlPct">Bagian partner dari treatment Walters Lash di cabang internal (%)</label><input type="text" id="hrWlPct" inputmode="numeric" placeholder="30"></div>
+        <div class="field"><label for="hrWlKata">Kata kunci treatment di Zenwel</label><input type="text" id="hrWlKata" maxlength="40" placeholder="walters"></div>
+        <div class="field"><label for="hrOwners">Nama owner (pisahkan koma)</label><input type="text" id="hrOwners" maxlength="120" placeholder="Kevin Maxmillian, Reyza"></div>
+        <div class="field"><label for="hrPrep">Prepared by / Yang membuat</label><input type="text" id="hrPrep" maxlength="40" placeholder="Yulianti"></div>
+        <div class="field"><label for="hrAppr">Approved by</label><input type="text" id="hrAppr" maxlength="40" placeholder="Kevin"></div>
+        <div class="field"><label for="hrKota">Kota tanda tangan</label><input type="text" id="hrKota" maxlength="30" placeholder="Tangerang"></div>
+      </div>
+      <p class="note" style="margin:10px 0 0">Bagi hasil: net profit grup partner dibagi sesuai porsi; bagian Internal dan biaya ads cabang partner dicatat sebagai pendapatan Internal di tutup buku. Setiap pengeluaran di atas batas memunculkan tombol "Kirim ke Owner (WA)" setelah disimpan, dan masuk daftar notifikasi di dashboard owner.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px"><button class="btn primary" id="hrSave" type="button">Simpan</button><span class="note" id="hrMsg"></span></div>
+    </div>
+    <div class="panel" data-pg="set/barang">
+      <div class="sec-h" style="margin-bottom:6px"><h2>Daftar barang stock opname</h2><span class="hint">sama untuk semua cabang</span></div>
+      <p class="note" style="margin:0 0 12px">Barang yang dihitung cabang saat stock opname. Batas minimum opsional: kalau stok di bawah angka ini, ditandai merah di tab Stok.</p>
+      <div id="itemEdit"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:4px">
+        <button class="btn" id="addItem" type="button">+ Tambah barang</button>
+        <button class="btn primary" id="saveItems" type="button">Simpan daftar barang</button>
+        <span class="note" id="itemMsg"></span>
+      </div>
+    </div>
+    <div class="stack" data-pg="set/role">
+      <div class="panel">
+        <div class="jr-head">
+          <div><span class="eyebrow">Akun login</span><h2>Username & password tim</h2></div>
+          <div class="jr-tools"><span class="hint" id="usHint"></span></div>
+        </div>
+        <p class="note" id="usNote" style="margin:10px 0 8px">Hanya Owner dan Head of admin yang bisa membuat atau mengubah akun. Lupa password hanya bisa disetujui Owner.</p>
+        <div class="scroll"><table id="usTable"></table></div>
+      </div>
+      <div class="two">
+        <div class="panel" id="usFormPanel">
+          <div class="sec-h" style="margin-bottom:12px"><h2 id="usFormTitle">Buat akun baru</h2><button class="btn ghost" id="usCancel" type="button" hidden>Batal edit</button></div>
+          <form id="usForm" autocomplete="off">
+            <div class="fields">
+              <div class="field"><label for="usNama">Nama</label><input type="text" id="usNama" maxlength="40" placeholder="Contoh: Yuli"></div>
+              <div class="field"><label for="usUser">Username</label><input type="text" id="usUser" maxlength="30" autocapitalize="none" spellcheck="false" placeholder="huruf kecil, spasi otomatis dihapus"></div>
+              <div class="field"><label for="usRole">Role</label><select id="usRole"></select></div>
+              <div class="field"><label for="usCab">Cabang</label><select id="usCab"></select></div>
+              <div class="field"><label for="usEmail">Email (untuk notifikasi & laporan)</label><input type="email" id="usEmail" maxlength="80" autocapitalize="none" spellcheck="false" placeholder="opsional"></div>
+              <div class="field"><label for="usTg">Telegram chat ID</label><input type="text" id="usTg" maxlength="20" list="tgList" placeholder="opsional · lihat Integrasi"></div>
+              <div class="field full"><label for="usPass" id="usPassLabel">Password awal</label>
+                <div style="display:flex;gap:8px"><input type="text" id="usPass" maxlength="64" autocomplete="new-password" placeholder="minimal 8 karakter, huruf & angka"><button class="btn" id="usGen" type="button">Acak</button></div></div>
+            </div>
+            <div class="form-foot"><span class="note" id="usMsg"></span><button class="btn primary" type="submit" id="usSave">Simpan akun</button></div>
+          </form>
+        </div>
+        <div class="panel" id="prqPanel">
+          <div class="sec-h" style="margin-bottom:6px"><h2>Permintaan lupa password</h2><span class="hint" id="prqHint"></span></div>
+          <p class="note" style="margin:0 0 10px">Hanya Owner yang bisa menyetujui. Setelah disetujui, user langsung bisa masuk dengan password baru yang dia buat sendiri.</p>
+          <div id="prqList"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="sec-h" style="margin-bottom:6px"><h2>Level akses per role</h2></div>
+        <p class="note" style="margin:0 0 10px"><b>Tidak</b> = menu disembunyikan · <b>Lihat</b> = bisa dibuka, form input dikunci · <b>Edit</b> = bisa input & ubah. Data sensitif (pengeluaran pusat, payroll, KPI, aset, akun, riwayat) hanya terbaca oleh akun dengan role admin (Owner, Head of admin, Admin keuangan, HRD).</p>
+        <div class="scroll"><table class="rl-m" id="rlMatrix"></table></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px">
+          <button class="btn primary" id="rlSave" type="button">Simpan level akses</button>
+          <button class="btn" id="rlReset" type="button">Kembalikan default</button>
+          <span class="note" id="rlMsg"></span>
+        </div>
+      </div>
+    </div>
+    <div class="panel" data-pg="set/log">
+      <div class="jr-head">
+        <div><span class="eyebrow">Audit trail</span><h2>Riwayat perubahan data</h2></div>
+        <div class="jr-tools">
+          <select id="loColl" style="width:auto" aria-label="Filter data"></select>
+          <input type="text" id="loQ" placeholder="Cari nama / keterangan" style="width:200px" aria-label="Cari">
+          <button class="btn" id="loCsv" type="button" hidden>Download CSV</button>
+        </div>
+      </div>
+      <p class="note" style="margin:10px 0 8px">Setiap tambah, ubah, dan hapus data tercatat: siapa, kapan, dari halaman mana, nilai sebelum dan sesudah. Menampilkan 300 perubahan terakhir.</p>
+      <div class="scroll"><table class="jr" id="loTable"></table></div>
+    </div>
+    <div class="panel" data-pg="set/data">
+      <div class="sec-h" style="margin-bottom:6px"><h2>Backup semua data ke Excel</h2></div>
+      <p class="note" style="margin:0 0 12px">Satu file Excel berisi semua data: pengeluaran, omzet, stok, payroll, KPI, absensi, aset, tutup buku, dan riwayat perubahan, masing-masing di sheet sendiri. Upload ke Google Drive lalu buka dengan Google Sheets kalau mau diolah di sana.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="btn primary" id="bkXlsx" type="button">Download Excel semua data</button><span class="note" id="bkMsg"></span></div>
+    </div>
+    <div data-pg="set/data"><div class="panel" id="sampleBox" hidden>
+      <div class="sec-h" style="margin-bottom:8px"><h2>Data contoh</h2></div>
+      <p class="note" style="margin:0 0 12px">Transaksi dan laporan stok berlabel <span class="tag contoh">contoh</span> adalah data simulasi. Hapus sebelum mulai pakai data asli.</p>
+      <button class="btn danger" id="clearSample" type="button">Hapus semua data contoh</button>
+      <span class="note" id="clearMsg"></span>
+    </div></div>
+  </section>
+
+  <!-- ASK ME -->
+  <section id="view-ask" class="stack" data-pg="ask">
+    <div class="ask-wrap" data-pg="ask/ai">
+      <div class="panel ask-panel">
+        <div class="sec-h" style="margin-bottom:8px"><h2>Ask Me!</h2><span class="hint">tanya cara pakai Lash Bounty ERP</span></div>
+        <div class="ask-log" id="askLog" aria-live="polite"></div>
+        <div class="chips" id="askChips" style="margin-top:10px"></div>
+        <form id="askForm" class="ask-form" autocomplete="off">
+          <textarea id="askIn" rows="2" maxlength="800" placeholder="Contoh: Gimana cara tutup buku bulan ini?" aria-label="Pertanyaan"></textarea>
+          <button class="btn primary" type="submit" id="askBtn">Kirim</button>
+        </form>
+        <p class="note" id="askNote" style="margin:8px 0 0">Jawaban dibuat oleh Claude dari panduan aplikasi ini. Untuk angka, cek langsung di halaman terkait.</p>
+      </div>
+    </div>
+    <div class="ask-wrap stack" data-pg="ask/boss">
+      <div class="panel">
+        <div class="sec-h" style="margin-bottom:6px"><h2>Ask Boss</h2><span class="hint">tanya langsung ke owner</span></div>
+        <p class="note" id="axNote" style="margin:0 0 12px"></p>
+        <form id="axForm" autocomplete="off" class="stack" style="gap:10px">
+          <div class="field"><label for="axTopik">Topik</label><select id="axTopik"></select></div>
+          <div class="field"><label for="axPesan">Pertanyaan / cerita kamu</label><textarea id="axPesan" rows="3" maxlength="1500" placeholder="Contoh: Saya bingung isi petty cash kalau belanja pakai uang pribadi dulu, gimana ya?"></textarea></div>
+          <div class="form-foot" style="margin-top:0"><span class="note" id="axMsg"></span><div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn" id="axWa" target="_blank" rel="noopener" hidden>Kabari owner lewat WA</a><button class="btn primary" type="submit">Kirim ke owner</button></div></div>
+        </form>
+      </div>
+      <div class="panel" id="axMineWrap">
+        <div class="sec-h" style="margin-bottom:8px"><h2>Pertanyaan saya</h2></div>
+        <div id="axMine"></div>
+      </div>
+      <div class="panel" id="axInbox" hidden>
+        <div class="sec-h" style="margin-bottom:8px"><h2>Kotak masuk owner</h2><span class="hint" id="axInboxHint"></span></div>
+        <div id="axList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BANKING -->
+  <section id="view-bank" class="stack" data-pg="bank">
+    <p class="note" id="bkRO" hidden style="margin:0">Banking (mutasi rekening & saldo bank) hanya bisa dibuka Owner dan Head of admin.</p>
+    <div class="stack" id="bkBody">
+      <div class="kpis" id="bkKpis" data-pg="bank/cocok bank/mutasi bank/saldo bank/rekening"></div>
+      <div class="panel" data-pg="bank/cocok">
+        <div class="jr-head">
+          <div><span class="eyebrow">Crosscheck mutasi · uang masuk bank vs POS</span><h2 id="bkTitle">Crosscheck mutasi</h2></div>
+          <div class="jr-tools"><select id="bkRek" style="width:auto" aria-label="Rekening"></select><label class="chk sm"><input type="checkbox" id="bkOnly"> Hanya yang perlu dicek</label><a class="btn primary" id="bkWa" target="_blank" rel="noopener" hidden>Kirim temuan ke Owner (WA)</a></div>
+        </div>
+        <p class="note" style="margin:10px 0 12px">Murni untuk cek uang masuk, tidak masuk ke accounting. POS = metode bayar harian di Omzet → Input Omzet (EDC/QRIS per rekening) + setoran cash. Mutasi = dari Upload Mutasi. Tanggal POS digeser sesuai jeda dana cair tiap rekening (atur di Rekening). Selisih di atas toleransi jadi <b>temuan</b> dan muncul di notifikasi owner.</p>
+        <div id="bkSum"></div>
+        <div class="sec-h" style="margin:16px 0 8px"><h3>Per tanggal</h3></div>
+        <div class="scroll"><table id="bkTable"></table></div>
+      </div>
+      <div class="panel" data-pg="bank/cocok">
+        <div class="sec-h" style="margin-bottom:6px"><h2>Transaksi janggal</h2><span class="hint">transaksi dobel di mutasi</span></div>
+        <div id="bkOdd"></div>
+      </div>
+      <div class="panel" data-pg="bank/mutasi">
+        <div class="sec-h" style="margin-bottom:12px"><h2>Upload mutasi rekening</h2><span class="hint">foto / screenshot, CSV, atau manual</span></div>
+        <div class="fields cfg-f">
+          <div class="field"><label for="muRek">Rekening</label><select id="muRek"></select></div>
+          <div class="field"><label>Cara input</label><div class="seg2" id="muMode"><button type="button" data-m="img" aria-pressed="true">Foto (AI)</button><button type="button" data-m="csv" aria-pressed="false">CSV</button><button type="button" data-m="man" aria-pressed="false">Manual</button></div></div>
+        </div>
+        <div id="muImg">
+          <label class="drop" for="muFile"><b>Pilih foto / screenshot mutasi</b><span>Bisa beberapa gambar sekaligus. Claude membaca tanggal, jam, keterangan, uang masuk/keluar, dan saldo. Cek hasilnya sebelum simpan.</span></label>
+          <input type="file" id="muFile" accept="image/*" multiple hidden>
+        </div>
+        <div id="muCsv" hidden>
+          <label class="drop" for="muCsvF"><b>Pilih file CSV mutasi</b><span>Export dari internet banking: kolom tanggal, keterangan, kredit/debit (atau nominal + CR/DB), saldo.</span></label>
+          <input type="file" id="muCsvF" accept=".csv,text/csv" hidden>
+          <button class="btn ghost" id="muTpl" type="button">Download template</button>
+        </div>
+        <form id="muMan" hidden autocomplete="off">
+          <div class="fields fields-3 cfg-f">
+            <div class="field"><label for="muTgl">Tanggal</label><input type="date" id="muTgl"></div>
+            <div class="field"><label for="muJam">Jam (opsional)</label><input type="time" id="muJam"></div>
+            <div class="field"><label for="muTipe">Jenis</label><select id="muTipe"><option value="CR">Uang masuk</option><option value="DB">Uang keluar</option></select></div>
+            <div class="field"><label for="muJml">Jumlah</label><div class="rp"><span>Rp</span><input type="text" id="muJml" inputmode="numeric" placeholder="0"></div></div>
+            <div class="field" style="grid-column:span 2"><label for="muKet">Keterangan</label><input type="text" id="muKet" maxlength="120" placeholder="Contoh: settlement EDC Pluit"></div>
+          </div>
+          <div class="form-foot"><span class="note">Untuk rekening yang mutasinya diinput manual (contoh EDC Pluit).</span><button class="btn" type="submit">Tambah ke daftar</button></div>
+        </form>
+        <p class="note" id="muMsg" style="margin:10px 0 0"></p>
+        <div id="muPrev"></div>
+      </div>
+      <div class="panel" data-pg="bank/mutasi">
+        <div class="sec-h" style="margin-bottom:10px"><h2 id="muListTitle">Mutasi tersimpan</h2></div>
+        <div class="scroll"><table id="muList"></table></div>
+      </div>
+      <div class="panel" data-pg="bank/saldo">
+        <div class="sec-h" style="margin-bottom:6px"><h2>Saldo bank · by catatan vs by reality</h2></div>
+        <p class="note" style="margin:0 0 12px"><b>By catatan</b> = saldo awal + uang masuk menurut POS & setoran − uang keluar di mutasi. <b>By reality</b> = saldo terakhir dari mutasi / input saldo dari m-banking. Selisih minus artinya ada uang yang seharusnya masuk tapi belum ada di bank. Koneksi API bank langsung belum bisa dari aplikasi ini.</p>
+        <div class="scroll"><table id="bsTable"></table></div>
+        <form id="bsForm" autocomplete="off" style="margin-top:14px">
+          <div class="fields fields-3 cfg-f">
+            <div class="field"><label for="bsRek">Rekening</label><select id="bsRek"></select></div>
+            <div class="field"><label for="bsTgl">Tanggal</label><input type="date" id="bsTgl"></div>
+            <div class="field"><label for="bsJml">Saldo</label><div class="rp"><span>Rp</span><input type="text" id="bsJml" inputmode="numeric" placeholder="0"></div></div>
+          </div>
+          <div class="form-foot"><span class="note" id="bsMsg"></span><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="submit" data-mode="awal">Set sebagai saldo awal</button><button class="btn primary" type="submit" data-mode="real">Simpan saldo reality</button></div></div>
+        </form>
+      </div>
+      <div class="panel" data-pg="bank/rekening">
+        <div class="sec-h" style="margin-bottom:6px"><h2>Rekening & channel pembayaran</h2></div>
+        <p class="note" style="margin:0 0 12px">Setiap rekening jadi kolom metode bayar di Omzet untuk cabang yang dicentang. Jeda dana cair: EDC biasanya H+1. Toleransi: selisih dalam persen ini dianggap potongan MDR.</p>
+        <div id="rkEdit"></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px"><button class="btn" id="rkAdd" type="button">+ Tambah rekening</button><button class="btn primary" id="rkSave" type="button">Simpan rekening</button><span class="note" id="rkMsg"></span></div>
+      </div>
+      <div class="stack" data-pg="bank/tabungan">
+        <div class="kpis" id="tsKpis"></div>
+        <div class="panel">
+          <div class="jr-head"><div><span class="eyebrow">Tabungan sewa tahunan · transfer ke rekening pribadi Kevin</span><h2>Setoran bulan ini</h2></div></div>
+          <p class="note" style="margin:8px 0 10px">Setiap setoran otomatis dicatat sebagai biaya <b>Sewa / mortgage — "Biaya sewa tempat (ditabung)"</b> di income statement cabang. Saat sewa tahunan dibayar dari tabungan, catat sebagai <b>Penarikan</b> (tidak dicatat biaya lagi).</p>
+          <div class="ts-quick" id="tsQuick"></div>
+        </div>
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:10px"><h2>12 bulan terakhir</h2></div>
+          <div class="scroll"><table class="stk" id="tsMatrix"></table></div>
+        </div>
+        <div class="two">
+          <div class="panel">
+            <div class="sec-h" style="margin-bottom:12px"><h2>Catat setoran / penarikan</h2></div>
+            <form id="tsForm" autocomplete="off">
+              <div class="fields">
+                <div class="field"><label for="tsTipe">Jenis</label><select id="tsTipe"><option value="setor">Setoran tabungan</option><option value="tarik">Penarikan (bayar sewa)</option></select></div>
+                <div class="field"><label for="tsCab">Cabang</label><select id="tsCab"></select></div>
+                <div class="field"><label for="tsTgl">Tanggal</label><input type="date" id="tsTgl"></div>
+                <div class="field"><label for="tsJml">Jumlah</label><div class="rp"><span>Rp</span><input type="text" id="tsJml" inputmode="numeric"></div></div>
+                <div class="field"><label for="tsRek">Rekening</label><input type="text" id="tsRek" maxlength="60"></div>
+                <div class="field"><label for="tsKet">Keterangan</label><input type="text" id="tsKet" maxlength="120" placeholder="Opsional"></div>
+              </div>
+              <p class="note" id="tsBiayaNote" style="margin:8px 0 0">Setoran = biaya sewa bulan itu di cabang tersebut.</p>
+              <div class="form-foot"><span class="note" id="tsMsg"></span><button class="btn primary" type="submit">Simpan</button></div>
+            </form>
+          </div>
+          <div class="panel">
+            <div class="sec-h" style="margin-bottom:12px"><h2>Pengaturan tabungan</h2></div>
+            <div id="tsCfg" class="ts-cfgs"></div>
+            <div class="field" style="margin-top:10px"><label for="tsCfgRek">Rekening tujuan</label><input type="text" id="tsCfgRek" maxlength="60"></div>
+            <div class="form-foot"><span class="note" id="tsCfgMsg"></span><button class="btn" id="tsCfgSave" type="button">Simpan pengaturan</button></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="sec-h" style="margin-bottom:10px"><h2>Riwayat</h2></div>
+          <div class="scroll"><table class="jr" id="tsList"></table></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CUSTOMER -->
+  <section id="view-cust" class="stack" data-pg="cust">
+    <p class="note" id="cuRO" hidden style="margin:0">Database customer hanya bisa dibuka admin.</p>
+    <div class="stack" id="cuBody">
+      <div class="kpis" id="cuKpis"></div>
+      <div class="panel" data-pg="cust/db">
+        <div class="jr-head">
+          <div><span class="eyebrow">Database customer</span><h2>Customer</h2></div>
+          <div class="jr-tools"><select id="cuRange" style="width:auto" aria-label="Rentang"><option value="per">Periode aktif</option><option value="12">12 bulan terakhir</option></select><button class="btn" id="cuAddBtn" type="button">+ Customer</button></div>
+        </div>
+        <form id="cuAdd" hidden autocomplete="off" style="margin-top:12px">
+          <div class="fields fields-3 cfg-f">
+            <div class="field"><label for="caNama">Nama</label><input type="text" id="caNama" maxlength="60"></div>
+            <div class="field"><label for="caHp">No. HP / WA</label><input type="text" id="caHp" inputmode="tel" maxlength="20" placeholder="08xxxxxxxxxx"></div>
+            <div class="field"><label for="caCab">Cabang</label><select id="caCab"></select></div>
+            <div class="field" style="grid-column:1/-1"><label for="caCat">Catatan</label><input type="text" id="caCat" maxlength="200"></div>
+          </div>
+          <div class="form-foot"><span class="note" id="caMsg"></span><button class="btn primary" type="submit">Simpan customer</button></div>
+        </form>
+        <div class="cu-tools">
+          <input type="text" id="cuQ" placeholder="Cari nama atau nomor HP" aria-label="Cari customer">
+          <select id="cuCab" aria-label="Cabang"></select>
+          <select id="cuSort" aria-label="Urutkan"><option value="last">Terakhir datang</option><option value="total">Total belanja</option><option value="n">Paling sering</option><option value="rating">Rating</option><option value="nama">Nama A–Z</option></select>
+          <span class="hint" id="cuHint"></span>
+        </div>
+        <div class="scroll"><table id="cuTable"></table></div>
+      </div>
+      <div class="panel" data-pg="cust/tx">
+        <div class="sec-h" style="margin-bottom:12px"><h2>Input transaksi customer</h2><span class="hint">siapa customernya, nomor HP, layanan</span></div>
+        <form id="ctForm" autocomplete="off">
+          <div class="fields fields-3 cfg-f">
+            <div class="field"><label for="ctTgl">Tanggal</label><input type="date" id="ctTgl"></div>
+            <div class="field"><label for="ctCabang">Cabang</label><select id="ctCabang"></select></div>
+            <div class="field"><label for="ctInv">No. invoice (opsional)</label><input type="text" id="ctInv" maxlength="40"></div>
+            <div class="field"><label for="ctNama">Nama customer</label><input type="text" id="ctNama" maxlength="60"></div>
+            <div class="field"><label for="ctHp">No. HP / WA</label><input type="text" id="ctHp" inputmode="tel" maxlength="20" placeholder="08xxxxxxxxxx"></div>
+            <div class="field"><label for="ctLay">Layanan</label><input type="text" id="ctLay" maxlength="120" placeholder="Contoh: Eyelash extension classic"></div>
+            <div class="field"><label for="ctJml">Total</label><div class="rp"><span>Rp</span><input type="text" id="ctJml" inputmode="numeric" placeholder="0"></div></div>
+            <div class="field"><label for="ctMet">Metode bayar</label><select id="ctMet"><option>Cash</option><option>QRIS</option><option>EDC</option><option>Transfer</option><option>Lainnya</option></select></div>
+            <div class="field"><label for="ctTer">Therapist</label><input type="text" id="ctTer" maxlength="40"></div>
+          </div>
+          <div class="form-foot"><span class="note" id="ctMsg"></span><button class="btn primary" type="submit">Simpan transaksi</button></div>
+        </form>
+      </div>
+      <div class="panel" data-pg="cust/tx">
+        <div class="sec-h" style="margin-bottom:6px"><h2>Import transaksi (CSV)</h2><span class="hint">export transaksi Zenwel / template</span></div>
+        <p class="note" style="margin:0 0 10px">Kolom dikenali otomatis: tanggal, cabang/outlet, nama customer, no HP, layanan/item, total, metode bayar, therapist/staff, no invoice. Kalau file tidak punya kolom cabang, pilih cabangnya di sini.</p>
+        <div class="fields cfg-f"><div class="field"><label for="cuImpCab">Cabang (kalau tidak ada di file)</label><select id="cuImpCab"></select></div></div>
+        <label class="drop" for="cuImpF"><b>Pilih file CSV transaksi</b><span>Transaksi yang sama (no invoice + customer + total) tidak dobel.</span></label>
+        <input type="file" id="cuImpF" accept=".csv,text/csv" hidden>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" id="cuTpl" type="button">Download template</button></div>
+        <div id="cuImpPrev" style="margin-top:10px"></div>
+      </div>
+      <div class="panel" data-pg="cust/tx">
+        <div class="sec-h" style="margin-bottom:10px"><h2 id="ctListTitle">Transaksi customer</h2></div>
+        <div class="scroll"><table id="ctList"></table></div>
+      </div>
+    </div>
+  </section>
+  <div class="sheet" id="cuSheet" hidden>
+    <div class="sheet-card" role="dialog" aria-labelledby="cuSheetTitle">
+      <div class="sec-h" style="margin-bottom:8px"><div><h2 id="cuSheetTitle">Customer</h2><span class="hint" id="cuSheetSub"></span></div><button class="btn ghost" id="cuClose" type="button">Tutup</button></div>
+      <div class="fields cfg-f">
+        <div class="field"><label for="cuNama">Nama</label><input type="text" id="cuNama" maxlength="60"></div>
+        <div class="field"><label for="cuHp">No. HP / WA</label><input type="text" id="cuHp" inputmode="tel" maxlength="20"></div>
+        <div class="field"><label>Rating</label><div class="rate" id="cuRate"></div></div>
+        <div class="field"><label for="cuTag">Label</label><select id="cuTag"><option value="">–</option><option>VIP</option><option>Langganan</option><option>Baru</option><option>Perhatian</option></select></div>
+        <div class="field" style="grid-column:1/-1"><label for="cuCat">Catatan</label><textarea id="cuCat" rows="3" maxlength="500" placeholder="Contoh: alergi lem tertentu, suka therapist Hapni, sering telat"></textarea></div>
+      </div>
+      <div class="form-foot"><span class="note" id="cuMsg"></span><button class="btn primary" id="cuSave" type="button">Simpan</button></div>
+      <div class="sec-h" style="margin:14px 0 6px"><h3>Riwayat transaksi</h3></div>
+      <div class="scroll"><table id="cuHist"></table></div>
+    </div>
+  </div>
+
+</div>
+<div class="login" id="login" hidden>
+  <div class="login-card" role="dialog" aria-labelledby="lgTitle">
+    <div class="login-brand"><span class="logo" aria-hidden="true">LB</span><div><b id="lgTitle">Lash Bounty ERP</b><small id="lgSub">Masuk dengan akun kamu</small></div></div>
+    <div id="lgLoad" class="note">Memuat akun…</div>
+    <form id="lgForm" class="stack" style="gap:12px" autocomplete="on" hidden>
+      <div class="field"><label for="lgUser">Username</label><input type="text" id="lgUser" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="30" placeholder="contoh: yuli"></div>
+      <div class="field"><label for="lgPass">Password</label><input type="password" id="lgPass" autocomplete="current-password" maxlength="64"></div>
+      <label class="chk" for="lgRemember"><input type="checkbox" id="lgRemember"> Ingat saya di perangkat ini</label>
+      <button class="btn primary" id="lgGo" type="submit">Masuk</button>
+      <button class="btn ghost" id="lgToForgot" type="button" style="align-self:center">Lupa password?</button>
+    </form>
+    <form id="fgForm" class="stack" style="gap:12px" autocomplete="off" hidden>
+      <p class="note" style="margin:0">Isi username dan password baru. Password baru aktif setelah <b>disetujui owner</b>.</p>
+      <div class="field"><label for="fgUser">Username</label><input type="text" id="fgUser" autocapitalize="none" spellcheck="false" maxlength="30"></div>
+      <div class="field"><label for="fgPass">Password baru</label><input type="password" id="fgPass" autocomplete="new-password" maxlength="64" placeholder="minimal 8 karakter, huruf & angka"></div>
+      <div class="field"><label for="fgPass2">Ulangi password baru</label><input type="password" id="fgPass2" autocomplete="new-password" maxlength="64"></div>
+      <button class="btn primary" id="fgGo" type="submit">Kirim permintaan ke owner</button>
+      <button class="btn" id="fgOwner" type="button" hidden>Saya pemilik aplikasi, reset langsung</button>
+      <button class="btn ghost" id="fgBack" type="button" style="align-self:center">Kembali ke login</button>
+    </form>
+    <form id="suForm" class="stack" style="gap:12px" autocomplete="off" hidden>
+      <p class="note" style="margin:0">Belum ada akun. Buat akun <b>Owner</b> pertama. Setelah itu owner dan Head of admin bisa membuat akun untuk tim.</p>
+      <div class="field"><label for="suNama">Nama</label><input type="text" id="suNama" maxlength="40"></div>
+      <div class="field"><label for="suUser">Username</label><input type="text" id="suUser" autocapitalize="none" spellcheck="false" maxlength="30"></div>
+      <div class="field"><label for="suPass">Password</label><input type="password" id="suPass" autocomplete="new-password" maxlength="64" placeholder="minimal 8 karakter, huruf & angka"></div>
+      <div class="field"><label for="suPass2">Ulangi password</label><input type="password" id="suPass2" autocomplete="new-password" maxlength="64"></div>
+      <button class="btn primary" id="suGo" type="submit">Buat akun owner & masuk</button>
+    </form>
+    <p class="note" id="lgMsg" style="margin:0" aria-live="polite"></p>
+  </div>
+</div>
+<div class="toast" id="toast" hidden></div>
+  <!-- v1.1 · dialog -->
+  <div class="sheet" id="sdSheet" hidden><div class="sheet-card sd-card" role="dialog" aria-labelledby="sdTitle">
+    <div class="sec-h"><div><h2 id="sdTitle">Kirim</h2><span class="note" id="sdSub"></span></div><button class="btn ghost" type="button" data-close="sdSheet" aria-label="Tutup">✕</button></div>
+    <div class="seg2 sd-tabs" id="sdTabs" role="group" aria-label="Kirim lewat"><button type="button" data-sd="wa" aria-pressed="true">WhatsApp</button><button type="button" data-sd="email" aria-pressed="false">Email</button><button type="button" data-sd="copy" aria-pressed="false">Salin pesan</button></div>
+    <div id="sd_wa"><div class="field"><label for="sdWaTo">Nomor WhatsApp (opsional)</label><input type="text" id="sdWaTo" inputmode="tel" placeholder="08xx · kosongkan untuk pilih kontak"></div>
+      <div class="field" style="margin-top:8px"><label for="sdWaText">Pesan</label><textarea id="sdWaText" rows="9"></textarea></div><p class="note" id="sdWaHint"></p>
+      <div class="form-foot"><span class="note">WhatsApp akan terbuka dengan pesan ini.</span><a class="btn primary" id="sdWaGo" target="_blank" rel="noopener">Buka WhatsApp</a></div></div>
+    <div id="sd_email" hidden><div class="fields"><div class="field full"><label for="sdTo">Kepada</label><input type="text" id="sdTo" placeholder="email@contoh.com, pisahkan koma"></div><div class="field full"><label for="sdCc">Cc (opsional)</label><input type="text" id="sdCc"></div>
+      <div class="field full"><label for="sdSubject">Subjek</label><input type="text" id="sdSubject" maxlength="200"></div><div class="field full"><label for="sdBody">Isi email (bisa diedit)</label><textarea id="sdBody" rows="12"></textarea></div></div>
+      <div class="sd-att" id="sdAtt"></div><label class="chk sm" id="sdTplRow"><input type="checkbox" id="sdSaveTpl"> Simpan sebagai template untuk email jenis ini</label>
+      <div class="form-foot"><span class="note" id="sdMsg"></span><button class="btn primary" id="sdSend" type="button">Kirim email</button></div></div>
+    <div id="sd_copy" hidden><textarea id="sdCopyText" rows="10"></textarea><div class="form-foot"><span class="note">Tempel di WhatsApp, Telegram, atau aplikasi lain.</span><button class="btn primary" id="sdCopyBtn" type="button">Salin pesan</button></div></div>
+  </div></div>
+  <div class="sheet" id="qrSheet" hidden><div class="sheet-card qr-card" role="dialog" aria-labelledby="qrTitle">
+    <div class="sec-h"><h2 id="qrTitle">QR</h2><button class="btn ghost" type="button" data-close="qrSheet" aria-label="Tutup">✕</button></div>
+    <div class="qr-box" id="qrBox"></div><code class="qr-link" id="qrLink"></code>
+    <div class="form-foot"><span class="note">Scan dengan kamera HP.</span><span style="display:flex;gap:8px"><button class="btn" id="qrCopy" type="button">Salin link</button><button class="btn primary" id="qrPng" type="button">Download QR</button></span></div>
+  </div></div>
+  <div class="sheet" id="kdSheet" hidden><div class="sheet-card" role="dialog" aria-labelledby="kdTitle">
+    <div class="sec-h"><div><h2 id="kdTitle">Detail karyawan</h2><span class="note" id="kdSub"></span></div><button class="btn ghost" type="button" data-close="kdSheet" aria-label="Tutup">✕</button></div>
+    <datalist id="tgList"></datalist><div class="fields" id="kdFields"></div>
+    <p class="note" style="margin:8px 0 0">No. KTP & rekening hanya terlihat oleh admin / HRD.</p>
+    <div class="form-foot"><span class="note" id="kdMsg"></span><button class="btn primary" id="kdOk" type="button">Pakai</button></div>
+  </div></div>
+  <div class="sheet" id="umWaSheet" hidden><div class="sheet-card" role="dialog" aria-labelledby="umWaTitle">
+    <div class="sec-h"><div><h2>Kirim WhatsApp</h2><span class="note" id="umWaTitle"></span></div><button class="btn ghost" type="button" data-close="umWaSheet" aria-label="Tutup">✕</button></div>
+    <p class="note" style="margin:0 0 8px">Klik nama satu per satu, WhatsApp akan terbuka dengan pesan siap kirim.</p>
+    <div class="um-wa" id="umWaList"></div><textarea id="umWaText" rows="6" style="margin-top:10px"></textarea>
+    <div class="form-foot"><span class="note">Atau salin lalu kirim ke grup.</span><button class="btn" id="umWaCopy" type="button">Salin pesan</button></div>
+  </div></div>
+  <div class="sheet" id="rfdSheet" hidden><div class="sheet-in" role="dialog" aria-labelledby="rfdTitle">
+    <b id="rfdTitle">Refund</b><label for="rfdNote" id="rfdLabel" class="note">Catatan</label><textarea id="rfdNote" rows="3" maxlength="200"></textarea>
+    <div class="form-foot"><span class="note" id="rfdMsg"></span><span style="display:flex;gap:8px"><button class="btn ghost" type="button" data-close="rfdSheet">Batal</button><button class="btn primary" id="rfdOk" type="button">Simpan</button></span></div>
+  </div></div>
+  <div class="sheet" id="rftSheet" hidden><div class="sheet-in" role="dialog" aria-labelledby="rftTitle">
+    <b>Tandai refund sudah ditransfer</b><span class="note" id="rftTitle"></span>
+    <div class="fields" style="margin-top:8px"><div class="field"><label for="rftTgl">Tanggal transfer</label><input type="date" id="rftTgl"></div><div class="field"><label for="rftDari">Dari rekening</label><select id="rftDari"></select></div></div>
+    <label class="chk sm" style="margin-top:8px"><input type="checkbox" id="rftBiaya"> Catat sebagai biaya "Refund customer" di cabang</label>
+    <div class="form-foot"><span class="note" id="rftMsg"></span><span style="display:flex;gap:8px"><button class="btn ghost" type="button" data-close="rftSheet">Batal</button><button class="btn primary" id="rftOk" type="button">Simpan</button></span></div>
+  </div></div>
+  <div class="sheet" id="rwpSheet" hidden><div class="sheet-in" role="dialog" aria-labelledby="rwpTitle">
+    <b id="rwpTitle">Download laporan</b>
+    <div class="rwp-list" id="rwpList"></div>
+    <div class="fields" style="margin-top:6px"><div class="field"><label for="rwpCab">Cabang (laporan Simple)</label><select id="rwpCab"></select></div><label class="chk sm" style="align-self:end"><input type="checkbox" id="rwpAllCab"> Semua cabang</label></div>
+    <div class="form-foot"><span class="note" id="rwpMsg"></span><span style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="rwpMail" type="button">Kirim…</button><button class="btn primary" id="rwpGo" type="button">Download PDF</button></span></div>
+  </div></div>
+  <div class="sheet" id="mpSheet" hidden><div class="sheet-in" role="dialog" aria-labelledby="mpTitle">
+    <b id="mpTitle">Proses permintaan</b>
+    <div class="mt-rows" id="mpItems" style="margin-top:6px"></div>
+    <div class="fields" style="margin-top:8px"><div class="field"><label for="mpSt">Status</label><select id="mpSt"></select></div><div class="field"><label for="mpEst">Estimasi sampai</label><input type="date" id="mpEst"></div>
+      <div class="field full"><label for="mpKet">Catatan untuk cabang</label><input type="text" id="mpKet" maxlength="160" placeholder="Contoh: dikirim via Gojek sore ini"></div></div>
+    <p class="note" style="margin:6px 0 0">Kalau lewat 3 hari dari estimasi barang belum diterima cabang, owner otomatis dinotifikasi.</p>
+    <div class="form-foot"><span class="note" id="mpMsg"></span><span style="display:flex;gap:8px"><button class="btn ghost" type="button" data-close="mpSheet">Batal</button><button class="btn primary" id="mpOk" type="button">Simpan</button></span></div>
+  </div></div>
+  <div class="sheet" id="msSheet" hidden><div class="sheet-in" role="dialog" aria-labelledby="msTitle">
+    <b id="msTitle">Musnahkan aset</b><span class="note" id="msSub"></span>
+    <div class="fields" style="margin-top:8px"><div class="field"><label for="msQty">Jumlah dimusnahkan</label><input type="text" id="msQty" inputmode="numeric"></div><div class="field"><label for="msTgl">Tanggal</label><input type="date" id="msTgl"></div>
+      <div class="field full"><label for="msAlasan">Kondisi / alasan</label><input type="text" id="msAlasan" maxlength="200" placeholder="Contoh: motor kursi rusak, tidak bisa diperbaiki"></div>
+      <div class="field"><label for="msCara">Cara pemusnahan</label><select id="msCara"></select></div><div class="field"><label for="msSaksi">Saksi</label><input type="text" id="msSaksi" maxlength="80" placeholder="Nama saksi"></div></div>
+    <div class="form-foot"><span class="note" id="msMsg"></span><span style="display:flex;gap:8px"><button class="btn ghost" type="button" data-close="msSheet">Batal</button><button class="btn danger" id="msOk" type="button">Musnahkan & buat berita acara</button></span></div>
+  </div></div>
+  <div class="sheet" id="baSheet" hidden><div class="sheet-card ba-card" role="dialog" aria-label="Berita acara pemusnahan">
+    <div class="sec-h"><h2>Berita acara pemusnahan</h2><button class="btn ghost" type="button" data-close="baSheet" aria-label="Tutup">✕</button></div>
+    <div class="paper-wrap"><div class="paper" id="baPaper"></div></div>
+    <div class="form-foot"><span class="note">Tanda tangan diambil dari Pengaturan → Akun saya.</span><span style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="baSign" type="button" hidden>Tandatangani (owner)</button><button class="btn" id="baSend" type="button">Kirim…</button><button class="btn primary" id="baPdf" type="button">Download PDF</button></span></div>
+  </div></div>
+
+<script src="../preview/demo-backend.js"></script>
+<script src="../preview/lb-preview.js"></script>
+<script src="js/app.js"></script>
+<script src="../preview/demo-ui.js"></script>
+</body>
+</html>

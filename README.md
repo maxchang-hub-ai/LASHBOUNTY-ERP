@@ -1,5 +1,22 @@
 # Lash Bounty ERP V.1.1
 
+## Pratinjau tampilan di GitHub Pages
+
+URL Pages membuka `index.html` di root, yang dibuat dari `public/index.html` dan menggunakan
+CSS serta aplikasi terbaru di `public/`. Jalankan `npm run build:pages` setelah mengubah
+HTML atau penghubung browser. Commit hasilnya bersama folder `preview/` dan `.nojekyll`.
+Pengaturan Pages: branch `dashboard`, folder `/ (root)`.
+
+Pratinjau menyediakan data contoh dan akun demo (password `demo1234`). Pilih akun pada
+layar login, kemudian klik Masuk. Perubahan hanya tersimpan di browser tersebut;
+gunakan Reset demo untuk kembali ke data awal. Email/Telegram hanya disimulasikan
+di Kotak keluar. Pratinjau tidak memakai database bersama atau layanan AI.
+Jangan masukkan data bisnis asli ke pratinjau.
+
+`npm start` tetap menjalankan aplikasi server dari `public/` dengan login dan database
+di `data/`; mode demo tidak dimuat oleh server Node.js. Untuk ERP bersama, deploy
+server dengan penyimpanan permanen.
+
 ERP untuk salon lash & nail multi-cabang (Gading Serpong, Pluit = grup Internal · Tebet, Bekasi = grup Wendy).
 Versi ini berjalan **mandiri**: punya server dan database sendiri, bisa dicoba offline di komputer lalu di-hosting di cloud.
 

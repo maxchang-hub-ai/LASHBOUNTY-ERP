@@ -6,6 +6,7 @@
   "main": "server/index.js",
   "engines": { "node": ">=18.17" },
   "scripts": {
+    "build:pages": "node scripts/build-pages.js",
     "start": "node server/index.js",
     "test": "node --test tests/api.test.js tests/v11.test.js",
     "check": "node scripts/check.js",

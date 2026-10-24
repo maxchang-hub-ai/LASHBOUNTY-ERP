@@ -3,6 +3,8 @@ node_modules/
 data/*
 !data/README.txt
 *.log
+output/
+.playwright-cli/
 .DS_Store
 # kunci Google service account & sertifikat (rahasia)
 google-key.json

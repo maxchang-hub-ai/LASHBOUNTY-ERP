@@ -1,0 +1,28 @@
+
+/* panel mode demo — memakai token warna aplikasi */
+.demo-bar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:60;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;max-width:calc(100% - 24px);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 8px 6px 6px;box-shadow:0 6px 24px rgba(0,0,0,.14);font-size:12.5px}
+.demo-tag{background:var(--warn-soft);color:var(--warn);font-weight:800;letter-spacing:.08em;border-radius:999px;padding:3px 9px;font-size:11px}
+.demo-txt{color:var(--muted)}
+.demo-bar button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:4px 11px;font:inherit;font-weight:700;cursor:pointer}
+.demo-bar button:hover{border-color:var(--accent)}
+.demo-bar button b{background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:0 6px;margin-left:4px;font-size:11px}
+.demo-acc{border:1px dashed var(--line);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;background:var(--bg)}
+.demo-acc>span{font-size:12.5px;color:var(--muted)}
+.demo-acc code{font-family:var(--f-num);background:var(--sunk);padding:1px 6px;border-radius:5px;color:var(--ink)}
+.demo-chips{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.demo-chip{display:flex;flex-direction:column;align-items:flex-start;gap:1px;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 9px;cursor:pointer;font:inherit;color:var(--ink);text-align:left}
+.demo-chip:hover,.demo-chip:focus-visible{border-color:var(--accent)}
+.demo-chip b{font-family:var(--f-num);font-size:12.5px}
+.demo-chip small{color:var(--muted);font-size:11.5px}
+.demo-list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.demo-msg{border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0}
+.demo-mh{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.demo-mh small{margin-left:auto;color:var(--muted)}
+.demo-msg pre{white-space:pre-wrap;word-break:break-word;font-family:var(--f-ui);font-size:12.5px;margin:6px 0 0;max-height:180px;overflow:auto;color:var(--ink)}
+body{padding-bottom:64px}
+@media (max-width:520px){.demo-txt{display:none}.demo-chips{grid-template-columns:1fr}}
+
+
+body{padding-bottom:110px}
+.demo-bar{border-radius:14px}
+@media(max-width:520px){.demo-bar{width:calc(100% - 24px)}.demo-txt{flex:1;min-width:170px}}
