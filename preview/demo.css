@@ -25,4 +25,4 @@ body{padding-bottom:64px}
 
 body{padding-bottom:110px}
 .demo-bar{border-radius:14px}
-@media(max-width:520px){.demo-bar{width:calc(100% - 24px)}.demo-txt{flex:1;min-width:170px}}
+@media(max-width:520px){.demo-bar{width:calc(100% - 24px)}.demo-txt{display:block;flex-basis:100%;text-align:center;font-size:11px}}

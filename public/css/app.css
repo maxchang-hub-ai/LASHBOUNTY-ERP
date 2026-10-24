@@ -105,7 +105,7 @@ tr.total td{font-weight:800;border-bottom:0;border-top:2px solid var(--ink)}
 .share{display:flex;align-items:center;gap:8px}
 .share .num{font-size:12.5px;min-width:44px;text-align:right}
 .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
-@media (max-width:860px){.two{grid-template-columns:1fr}}
+@media (max-width:860px){.two{grid-template-columns:minmax(0,1fr)}}
 .ai-out{white-space:pre-wrap;font-size:14.5px;line-height:1.6;margin:0;background:var(--sunk);border-radius:8px;padding:14px 16px}
 .flag{display:flex;gap:10px;padding:10px 0;border-top:1px solid var(--line);align-items:flex-start;flex-wrap:wrap}
 .flag:first-child{border-top:0}
