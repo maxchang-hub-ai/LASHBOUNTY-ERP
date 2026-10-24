@@ -4,10 +4,8 @@
 (function () {
   "use strict";
   const API = new URL("api/", document.baseURI).href;
-  // cadangan window.name kalau penyimpanan browser diblokir (supaya login tetap jalan setelah muat ulang)
-  const WN = { all() { try { return JSON.parse(window.name || "{}"); } catch { return {}; } }, get(k) { return (this.all().kv || {})[k] ?? null; }, set(k, v) { const a = this.all(); a.kv = { ...(a.kv || {}), [k]: v }; try { window.name = JSON.stringify(a); } catch {} }, del(k) { const a = this.all(); if (a.kv) delete a.kv[k]; try { window.name = JSON.stringify(a); } catch {} } };
-  const mk = st => ({ get(k) { try { const v = st().getItem(k); if (v != null) return v; } catch {} return WN.get(k); }, set(k, v) { try { st().setItem(k, v); } catch {} WN.set(k, v); }, del(k) { try { st().removeItem(k); } catch {} WN.del(k); } });
-  const LS = mk(() => localStorage), SS = mk(() => sessionStorage);
+  const LS = { get(k) { try { return localStorage.getItem(k); } catch { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch {} }, del(k) { try { localStorage.removeItem(k); } catch {} } };
+  const SS = { get(k) { try { return sessionStorage.getItem(k); } catch { return null; } }, set(k, v) { try { sessionStorage.setItem(k, v); } catch {} }, del(k) { try { sessionStorage.removeItem(k); } catch {} } };
   const rid = n => Array.from(crypto.getRandomValues(new Uint8Array(n)), b => (b % 36).toString(36)).join("");
 
   let deviceId = LS.get("lb-device"); if (!/^[a-z0-9]{16,48}$/.test(deviceId || "")) { deviceId = rid(24); LS.set("lb-device", deviceId); }
@@ -16,8 +14,15 @@
 
   function err(code, message, extra) { return Object.assign(new Error(message || code), { code }, extra || {}); }
   async function call(pathname, body, opts = {}) {
-    try { return await window.LB_DEMO.call(pathname, body === undefined ? undefined : JSON.parse(JSON.stringify(body)), { token, device: deviceId }); }
-    catch (e) { if (e && e.code) throw e; throw err("unavailable", (e && e.message) || "Gagal memproses."); }
+    let res;
+    try {
+      res = await fetch(API + pathname, { method: body === undefined ? "GET" : "POST", signal: opts.signal, cache: "no-store",
+        headers: { "Content-Type": "application/json", "X-LB-Device": deviceId, ...(token ? { Authorization: "Bearer " + token } : {}) },
+        body: body === undefined ? undefined : JSON.stringify(body) });
+    } catch (e) { if (e?.name === "AbortError") throw err("cancelled", "Dibatalkan"); throw err("unavailable", "Server tidak bisa dihubungi."); }
+    const j = await res.json().catch(() => ({}));
+    if (!res.ok) throw err(j.code || "unavailable", j.message || "HTTP " + res.status, { status: res.status, wait: j.wait });
+    return j;
   }
 
   const SA = window.LB_STANDALONE = {
@@ -41,7 +46,7 @@
   const subs = new Set();
   let es = null, esFails = 0;
   function connectStream() {
-    if (es) return; es = window.LB_DEMO.onChange(m => { for (const s of subs) if (s.c === m.c) s.kick(); }); return;
+    if (es || typeof EventSource === "undefined") return;
     es = new EventSource(API + "stream");
     es.onmessage = e => { let m; try { m = JSON.parse(e.data); } catch { return; } for (const s of subs) if (s.c === m.c) s.kick(); };
     es.onopen = () => { if (esFails) for (const s of subs) s.kick(); esFails = 0; };
@@ -147,10 +152,10 @@
   /* ---------------- downloads ---------------- */
   const downloads = {
     async save({ filename, data }) {
-      const host = window.LB_DEMO.host, dl = host?.use ? await host.use("downloads").catch(() => null) : null;
-      if (!dl) throw err("unavailable", "Download tidak tersedia di tampilan ini.");
-      const blob = data instanceof Blob ? data : new Blob([data], { type: /\.csv$/i.test(filename) ? "text/csv;charset=utf-8" : /\.json$/i.test(filename) ? "application/json" : "application/octet-stream" });
-      try { return await dl.save({ filename: String(filename || "download"), data: blob }); } catch (e) { throw err(e?.code === "declined" ? "declined" : e?.code || "unavailable", e?.message || "Download gagal."); }
+      const blob = data instanceof Blob ? data : new Blob([data], { type: /\.csv$/i.test(filename) ? "text/csv;charset=utf-8" : "application/octet-stream" });
+      const url = URL.createObjectURL(blob), a = document.createElement("a");
+      a.href = url; a.download = String(filename || "download"); a.rel = "noopener"; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 30000); return {};
     },
   };
 

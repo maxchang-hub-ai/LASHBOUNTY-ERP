@@ -1,0 +1,17 @@
+{
+  "name": "lash-bounty-erp",
+  "version": "1.1.0",
+  "description": "Lash Bounty ERP V.1.1 — ERP salon lash & nail multi-cabang: petty cash, omzet, tutup buku, banking, customer, HRD, Ask Me & Ask Boss.",
+  "private": true,
+  "main": "server/index.js",
+  "engines": { "node": ">=18.17" },
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "node --test tests/api.test.js tests/v11.test.js",
+    "check": "node scripts/check.js",
+    "reset-password": "node scripts/reset-password.js",
+    "backup": "node scripts/backup.js",
+    "restore": "node scripts/restore.js"
+  },
+  "license": "UNLICENSED"
+}

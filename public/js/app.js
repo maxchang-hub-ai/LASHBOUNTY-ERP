@@ -867,7 +867,7 @@
     catch { $("slipMsg").textContent = "Browser menolak salin otomatis. Teks slip:\n" + t; } });
   let h2cP = null;
   const loadH2C = () => h2cP ||= new Promise((res, rej) => { if (window.html2canvas) return res(window.html2canvas); const sc = document.createElement("script");
-    sc.charset = "utf-8"; sc.src = "vendor/html2canvas-1.4.1.min.js"; sc.onload = () => res(window.html2canvas); sc.onerror = () => { h2cP = null; rej(new Error("load")); }; document.head.appendChild(sc); });
+    sc.src = "vendor/html2canvas-1.4.1.min.js"; sc.onload = () => res(window.html2canvas); sc.onerror = () => { h2cP = null; rej(new Error("load")); }; document.head.appendChild(sc); });
   $("slipPng").addEventListener("click", async () => {
     if (!S.slip) return; if (!S.dl) { $("slipMsg").textContent = "Download tidak tersedia di tampilan ini. Pakai 'Salin teks WA'."; return; }
     const btn = $("slipPng"); btn.disabled = true; btn.textContent = "Membuat gambar…";
@@ -2343,7 +2343,7 @@
   // backup Excel
   let xlsxP = null;
   const loadXlsx = () => xlsxP ||= new Promise((res, rej) => { if (window.XLSX) return res(window.XLSX); const sc = document.createElement("script");
-    sc.charset = "utf-8"; sc.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"; sc.onload = () => res(window.XLSX); sc.onerror = () => { xlsxP = null; rej(new Error("load")); }; document.head.appendChild(sc); });
+    sc.src = "vendor/xlsx-0.18.5.full.min.js"; sc.onload = () => res(window.XLSX); sc.onerror = () => { xlsxP = null; rej(new Error("load")); }; document.head.appendChild(sc); });
   $("bkXlsx").addEventListener("click", async () => {
     if (!RAWDB || !S.dl) { $("bkMsg").textContent = "Butuh penyimpanan & download aktif."; return; }
     const btn = $("bkXlsx"); btn.disabled = true; $("bkMsg").textContent = "Mengambil data…";
@@ -2654,7 +2654,7 @@
     try { await S.db.doc("expenses/" + id).update({ hpp: v === "1" }); } catch { toast("Gagal menyimpan klasifikasi"); } });
   let jsPdfP = null;
   const loadJsPdf = () => jsPdfP ||= new Promise((res, rej) => { if (window.jspdf) return res(window.jspdf); const sc = document.createElement("script");
-    sc.charset = "utf-8"; sc.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"; sc.onload = () => res(window.jspdf); sc.onerror = () => { jsPdfP = null; rej(new Error("load")); }; document.head.appendChild(sc); });
+    sc.src = "vendor/jspdf-2.5.1.umd.min.js"; sc.onload = () => res(window.jspdf); sc.onerror = () => { jsPdfP = null; rej(new Error("load")); }; document.head.appendChild(sc); });
   $("rpPdf").addEventListener("click", async () => {
     if (!S.dl) { toast("Download tidak tersedia di tampilan ini"); return; }
     const el = $("paper"), btn = $("rpPdf"); btn.disabled = true; btn.textContent = "Membuat PDF…";
@@ -3410,7 +3410,7 @@ Tanggal Indonesia ditulis hari/bulan. Kalau tahun tidak terlihat, pakai tahun ${
 
   // ---- QR untuk setiap link khusus
   let qrP = null;
-  const loadQr = () => qrP ||= new Promise((res, rej) => { if (window.qrcode) return res(window.qrcode); const sc = document.createElement("script"); sc.charset = "utf-8"; sc.src = "vendor/qrcode-generator-1.4.4.js"; sc.onload = () => res(window.qrcode); sc.onerror = () => { qrP = null; rej(new Error("load")); }; document.head.appendChild(sc); });
+  const loadQr = () => qrP ||= new Promise((res, rej) => { if (window.qrcode) return res(window.qrcode); const sc = document.createElement("script"); sc.src = "vendor/qrcode-generator-1.4.4.js"; sc.onload = () => res(window.qrcode); sc.onerror = () => { qrP = null; rej(new Error("load")); }; document.head.appendChild(sc); });
   document.addEventListener("click", async e => { const b = e.target.closest("[data-qr]"); if (!b) return;
     const url = b.dataset.qr, title = b.dataset.qrt || "Link";
     try { const qrcode = await loadQr(), q = qrcode(0, "M"); q.addData(url); q.make();
@@ -4218,7 +4218,7 @@ ops = daftar LENGKAP usulan terbaru (kirim ulang semua).`;
   }
   $("mbDev").addEventListener("click", e => { const b = e.target.closest("[data-mbdev]"); if (!b) return; ls.set("lb-mbdev", b.dataset.mbdev); renderMobile(); });
   // service worker kecil supaya bisa dipasang sebagai aplikasi (PWA) di Android; data tetap selalu dari server
-  if (false && (location.protocol === "https:" || /^(localhost|127\.0\.0\.1)$/.test(location.hostname))) navigator.serviceWorker.register("sw.js").catch(() => {});
+  if ("serviceWorker" in navigator && (location.protocol === "https:" || /^(localhost|127\.0\.0\.1)$/.test(location.hostname))) navigator.serviceWorker.register("sw.js").catch(() => {});
 
   /* ---------- v1.1 · Pengaturan → Integrasi (Telegram, email, Google Sheet, backup) ---------- */
   S.integ = null; S.integAt = 0; S.notifyCfg = null;
