@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Lash Bounty">
+  <rect width="64" height="64" rx="15" fill="#0D6654"/>
+  <path d="M46.5 12.5l1.6 4 4 1.6-4 1.6-1.6 4-1.6-4-4-1.6 4-1.6z" fill="#F2C66D"/>
+  <g fill="none" stroke="#fff" stroke-linecap="round">
+    <path d="M12 29c11 11 29 11 40 0" stroke-width="3.4"/>
+    <path d="M16.6 33.6l-3.6 6.6M23.4 37.3l-1.9 7.5M32 38.6v7.9M40.6 37.3l1.9 7.5M47.4 33.6l3.6 6.6" stroke-width="2.6"/>
+  </g>
+</svg>
